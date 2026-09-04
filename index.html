@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Hshf5j4nlmVkwSGTHlM0ij">
+<head data-page-node-id="W2PXBg5lMKgx3T0ZmuG7BI">
+<meta charset="UTF-8" data-page-node-id="fhn5Q6zQpZ714tPHkHgpEF">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5" data-page-node-id="nGuIv6Ebgmomh4UarrphBP">
+<title>我的定制化日报 · 2026年9月4日</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2430; --sub:#6b7280; --line:#e6e8ef;
+  --primary:#1669ff;
+  --hero-from:#5e48e8; --hero-to:#7c3aed; --hero-dark:#9333ea;
+}
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body {
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Arial,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.65; font-size:15px;
+}
+
+/* ═══ HERO 紫渐变区域（高度更高，包含 3 天天气）═══ */
+.hero {
+  background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 55%,var(--hero-dark) 100%);
+  color:#fff; padding:36px 20px 28px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::after {
+  content:''; position:absolute; left:0; right:0; bottom:0; height:30px;
+  background:linear-gradient(to bottom,transparent,var(--bg));
+}
+.hero-inner { position:relative; z-index:1; max-width:960px; margin:0 auto; }
+.hero-kicker { font-size:13px; letter-spacing:3px; opacity:.82; text-transform:uppercase; margin-bottom:10px; }
+.hero-title { font-size:34px; font-weight:800; letter-spacing:-.5px; margin-bottom:6px; text-shadow:0 2px 12px rgba(0,0,0,.18); }
+.hero-date { font-size:14px; opacity:.92; margin-bottom:14px; }
+.live-clock {
+  font-family:"SF Mono","Menlo","Consolas",monospace;
+  font-weight:600; letter-spacing:1px;
+  background:rgba(255,255,255,.2); padding:2px 12px; border-radius:8px;
+  display:inline-block; min-width:84px; text-align:center;
+}
+
+/* 3 天郑州天气（Hero 内） */
+.weather-3day {
+  display:flex; gap:10px; justify-content:center; margin-top:8px; flex-wrap:wrap;
+}
+.weather-card {
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25);
+  border-radius:14px; padding:10px 16px; min-width:110px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  transition:transform .2s;
+}
+.weather-card:hover { transform:translateY(-2px); background:rgba(255,255,255,.2); }
+.weather-day { font-size:11.5px; opacity:.85; letter-spacing:1px; }
+.weather-icon { font-size:22px; line-height:1.2; margin:1px 0; }
+.weather-temp { font-size:16px; font-weight:700; }
+.weather-desc { font-size:10.5px; opacity:.82; max-width:120px; text-align:center; }
+
+/* ═══ STICKY 极简菜单（白色背景，无序号无图标）═══ */
+.sticky-stats {
+  position:sticky; top:0; z-index:100;
+  background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line); padding:10px 14px;
+  transition:box-shadow .25s ease;
+}
+.sticky-stats.is-stuck {
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
+.stats-sentinel { height:0; }
+.stats-inner {
+  display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; max-width:1100px; margin:0 auto;
+  -ms-overflow-style:none;
+}
+.stats-inner::-webkit-scrollbar { display:none; }
+
+.stat-pill {
+  flex:1; min-width:90px; display:flex; flex-direction:column; align-items:center;
+  background:var(--card); border:1px solid var(--line);
+  border-radius:10px; padding:8px 10px; text-decoration:none; color:inherit;
+  transition:all .22s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden;
+  text-align:center;
+}
+.stat-pill::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--c);
+}
+.stat-pill:hover {
+  background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.10); color:var(--text-primary);
+  transform:translateY(-2px);
+}
+/* sticky 菜单 active 高亮（scroll-spy + click） */
+.stat-pill.is-active {
+  background:var(--c); color:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  transform:translateY(-2px);
+}
+.stat-pill.is-active::before { background:rgba(255,255,255,.5); }
+.stat-pill.is-active .stat-num { color:#fff; }
+.stat-pill.is-active .stat-label { color:#fff; font-weight:800; }
+.stat-num {
+  font-size:20px; font-weight:800; color:var(--c); line-height:1.1;
+  margin-left:-3px;
+}
+.stat-label {
+  font-size:12.5px; font-weight:700; color:var(--text-primary);
+  margin-top:2px; overflow:hidden; text-overflow:ellipsis; max-width:100%;
+  white-space:nowrap;
+}
+
+/* ═══ MAIN ═══ */
+.main { max-width:1100px; margin:0 auto; padding:24px 16px 56px; }
+.section { margin-bottom:42px; scroll-margin-top:120px; }
+.sec-head { display:flex; align-items:center; gap:11px; margin-bottom:6px; }
+.sec-badge {
+  width:34px; height:34px; border-radius:10px; color:#fff; font-weight:800; font-size:17px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.sec-title { font-size:20px; font-weight:750; display:flex; align-items:center; gap:9px; }
+.sec-count {
+  font-size:12px; font-weight:600; color:var(--sub); background:var(--bg);
+  padding:2px 10px; border-radius:12px; border:1px solid var(--line);
+}
+.sec-intro { color:var(--sub); font-size:13.5px; margin:0 0 16px 45px; }
+.placeholder {
+  background:var(--card); border:1px dashed var(--line); border-radius:14px;
+  padding:26px; text-align:center; color:var(--sub); font-size:14px;
+}
+
+/* ═══ CARDS ═══ */
+.cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px; }
+.card {
+  position:relative; background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:18px 18px 14px; box-shadow:0 1px 3px rgba(0,0,0,.04);
+  transition:all .25s cubic-bezier(.4,0,.2,1); overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.card:hover {
+  box-shadow:0 14px 32px rgba(31,36,48,.12);
+  transform:translateY(-4px) rotateX(2deg);
+  border-color:rgba(124,58,237,.35);
+}
+.card-num {
+  position:absolute; top:13px; right:13px; width:25px; height:25px; border-radius:50%;
+  color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center;
+}
+.card-title { font-size:16px; font-weight:700; line-height:1.42; margin-bottom:9px; padding-right:34px; }
+.card-title a { color:var(--ink); text-decoration:none; transition:color .2s; }
+.card-title a:hover { color:var(--primary); }
+.card-summary {
+  font-size:13.5px; color:var(--sub); line-height:1.62;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  flex:1; margin-bottom:10px;
+}
+
+/* 卡片底部一行 */
+.card-foot {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:auto; padding-top:10px; gap:8px;
+  border-top:1px dashed var(--line);
+}
+.foot-left { display:flex; align-items:center; gap:6px; min-width:0; flex:1; overflow:hidden; }
+.chip {
+  display:inline-block; font-size:11.5px; color:var(--sub); background:var(--bg);
+  border:1px solid var(--line); padding:2px 10px; border-radius:20px;
+  max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.card-time { font-size:11.5px; color:var(--sub); white-space:nowrap; }
+.read-original {
+  display:inline-block; font-size:12.5px; font-weight:600; color:var(--primary);
+  text-decoration:none; border:1px solid rgba(22,105,255,.4); padding:4px 12px;
+  border-radius:8px; transition:all .2s; flex-shrink:0;
+  background:rgba(22,105,255,.04);
+}
+.read-original:hover {
+  background:var(--primary); color:#fff; border-color:var(--primary);
+  transform:translateX(2px);
+}
+
+/* FUN 卡片（轻松一刻 - 完全无链接） */
+.fun-card {
+  background:linear-gradient(180deg,#ffffff 0%,#e0f7f5 100%);
+  border-color:#a7e3df;
+}
+.fun-card:hover { border-color:rgba(20,184,166,.5); }
+.fun-card .chip { border-color:#a7e3df; background:#f0fdfa; color:#0f766e; }
+.fun-foot { justify-content:space-between; }
+.fun-badge {
+  font-size:11px; color:#0f766e; background:#a7e3df; padding:2px 10px;
+  border-radius:10px; font-weight:600;
+}
+
+/* RECOMMENDATIONS — 品牌Logo + 阅读原文风格按钮 */
+.rec-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:14px; }
+.rec-card {
+  display:flex; align-items:center; gap:14px; padding:16px 16px 16px 14px; background:var(--card);
+  border:1px solid var(--line); border-radius:14px; text-decoration:none; color:inherit;
+  box-shadow:0 1px 3px rgba(0,0,0,.04); transition:all .25s cubic-bezier(.4,0,.2,1);
+  position:relative; overflow:hidden;
+}
+.rec-card:hover {
+  box-shadow:0 12px 28px rgba(0,0,0,.10); transform:translateY(-3px);
+  border-color:rgba(245,87,108,.45);
+}
+.rec-logo {
+  width:48px; height:48px; flex-shrink:0; border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.10);
+  transition:transform .25s ease;
+}
+.rec-card:hover .rec-logo { transform:scale(1.08) rotate(-3deg); }
+.rec-body { flex:1; min-width:0; padding-right:8px; }
+.rec-title { font-size:15.5px; font-weight:700; color:var(--ink); margin-bottom:5px; }
+.rec-summary {
+  font-size:12.5px; color:var(--sub); line-height:1.55;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.rec-tag {
+  display:inline-block; font-size:10.5px; color:#fff; padding:2px 9px;
+  border-radius:8px; font-weight:600; margin-left:6px; vertical-align:middle;
+}
+/* 阅读原文风格的按钮 */
+.rec-btn {
+  display:inline-flex; align-items:center; white-space:nowrap;
+  font-size:12px; font-weight:600; color:#f5576c;
+  background:rgba(245,87,108,.06); text-decoration:none;
+  border:1px solid rgba(245,87,108,.40); padding:5px 13px;
+  border-radius:8px; transition:all .22s; flex-shrink:0;
+}
+.rec-btn:hover {
+  background:#f5576c; color:#fff; border-color:#f5576c;
+  transform:translateX(2px);
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align:center; padding:30px 18px 42px; color:var(--sub); font-size:13px;
+  border-top:1px solid var(--line); background:var(--card);
+}
+.foot-total { margin-bottom:12px; }
+.foot-total b { color:var(--ink); font-size:15px; }
+.foot-sources {
+  display:flex; flex-wrap:wrap; gap:7px; justify-content:center; align-items:center;
+  margin-bottom:12px;
+}
+.foot-label { font-weight:600; color:var(--ink); }
+.foot-source {
+  background:var(--bg); padding:3px 10px; border-radius:8px; font-size:12px;
+  border:1px solid var(--line); color:var(--sub);
+  text-decoration:none; transition:all .2s;
+}
+a.foot-source:hover {
+  background:var(--primary); color:#fff; border-color:var(--primary);
+  transform:translateY(-1px);
+}
+.foot-attr { opacity:.65; font-size:12px; }
+.foot-copy { opacity:.55; font-size:12px; margin-top:6px; }
+span.foot-source { cursor:default; }
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px) {
+  .cards { grid-template-columns:1fr; }
+  .rec-grid { grid-template-columns:1fr; }
+  .main { padding:18px 12px 44px; }
+  .sec-title { font-size:18px; }
+  .sec-intro { margin-left:0; }
+  .stat-pill { min-width:90px; padding:6px 10px; }
+  .stat-num { font-size:18px; }
+  .stat-meta { font-size:10.5px; }
+  .stat-label { max-width:60px; }
+  .weather-card { min-width:90px; padding:8px 12px; }
+  .weather-3day { gap:8px; }
+}
+@media(max-width:480px) {
+  .card { padding:16px 15px 12px; }
+  .card-title { font-size:15px; }
+  .stat-pill { min-width:80px; }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#94a3b8; }
+::selection { background:rgba(22,105,255,.18); }
+
+/* ═══ 回到顶部按钮 ═══ */
+.back-to-top {
+  position:fixed; right:24px; bottom:24px; z-index:99;
+  width:46px; height:46px; border-radius:50%;
+  background:rgba(22,105,255,.95); color:#fff; border:none;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 20px rgba(22,105,255,.4);
+  opacity:0; pointer-events:none;
+  transform:translateY(20px);
+  transition:opacity .3s ease, transform .3s ease, background .2s ease;
+}
+.back-to-top.visible {
+  opacity:1; pointer-events:auto; transform:translateY(0);
+}
+.back-to-top:hover {
+  background:#1669ff;
+  box-shadow:0 8px 24px rgba(22,105,255,.5);
+  transform:translateY(-2px);
+}
+
+</style>
+</head>
+<body data-page-node-id="ISKBiINKp23OjAQFhi4ECZ"><header class="hero" data-page-node-id="H0LScWc9Rh3MgruX8mw8D3">
+  <div class="hero-inner" data-page-node-id="7NYOWGJ1i8nEjHBa2wzh0F">
+    <p class="hero-kicker" data-page-node-id="dXjJ6dD26LDblE1oSRp0tc">我的定制化日报 · 晨间读物</p>
+    <h1 class="hero-title" data-page-node-id="tzF4i5xRdB3xJ6TQ3SVGqL">今天，值得一看</h1>
+    <p class="hero-date" data-page-node-id="tczRxZ4XKFhKByygzX0BtV">2026年9月4日 &middot; <span class="live-clock" id="liveClock" data-page-node-id="DEUj4tzdG5mdSeBKIfg1FB">--:--:--</span></p>
+    <div class="weather-3day" data-page-node-id="WOhYffsECXUIyYuMS71fTP">
+      <div class="weather-card" data-page-node-id="6tSMsDKFXkNuL1Il74bTA5">
+        <div class="weather-day" data-page-node-id="ejAYOTeUzBQJBQhu6u3Zhc">今天</div>
+        <div class="weather-icon" data-page-node-id="8FTvyHEwGA8wXCnKNlmqiE">☀️</div>
+        <div class="weather-temp" data-page-node-id="9YaGc6ErZK5g7nZzB1LSAL">21~31℃</div>
+        <div class="weather-desc" data-page-node-id="s3gtirCADBAtzIhhWnU6ZQ">晴·东北风2-3级·秋高气爽</div>
+      </div>
+      <div class="weather-card" data-page-node-id="myY0pVNUO0iXsjiGWIjxQk">
+        <div class="weather-day" data-page-node-id="0S36R5GKMKYjGGDA8wGFeP">明天</div>
+        <div class="weather-icon" data-page-node-id="qc6jBqNVVoO0ZiEkBI6LUL">☀️</div>
+        <div class="weather-temp" data-page-node-id="qlZEiUTsFxryHhVCnNWDpY">21~32℃</div>
+        <div class="weather-desc" data-page-node-id="UiIOZTPtvoroofu2Z7Fbov">晴·东北风2-3级</div>
+      </div>
+      <div class="weather-card" data-page-node-id="jdrrFfUpbMl6GqpoBvr6Kg">
+        <div class="weather-day" data-page-node-id="wJhvYhchZWzQJfmI6mxthr">后天</div>
+        <div class="weather-icon" data-page-node-id="LOcl5q5aqdaFEH0RHoClyj">🌤️</div>
+        <div class="weather-temp" data-page-node-id="2lTKQlIt20ZFcDcXvsGb8E">22~32℃</div>
+        <div class="weather-desc" data-page-node-id="Bev37djC5cDgAvdT8DtedF">晴间多云·昼夜温差大</div>
+      </div>
+    </div>
+  </div>
+</header><nav class="sticky-stats" id="topNav" data-page-node-id="1SjEBdnb2uSkcGZFW2fWnP">
+  <div class="stats-sentinel" data-page-node-id="fCjhVmlUDExVxdznEe2P5u"></div>
+  <div class="stats-inner" data-page-node-id="bKJ04JtGLiRbkgNOZ7gKsA">
+    <a href="#sec-0" class="stat-pill" style="--c:#ef4444" data-page-node-id="iApocXGnD8PYXk84lM9w4k"><span class="stat-num" data-page-node-id="jhihqNXrAfFSGWw2yl2vZO">9</span><span class="stat-label" data-page-node-id="JMCltKuiuXHxIteBPfPHHv">本地生活</span></a>
+    <a href="#sec-1" class="stat-pill" style="--c:#2563eb" data-page-node-id="cvj5oNK7wInNcAFwJzVNT7"><span class="stat-num" data-page-node-id="hAV6tXdhmGw9LAIIYkTHeg">9</span><span class="stat-label" data-page-node-id="JgzjZnWL2BU6u0xATUpcla">AI · 国内重点</span></a>
+    <a href="#sec-2" class="stat-pill" style="--c:#7c3aed" data-page-node-id="MlDcFN9fpjXQw1mEDuh77w"><span class="stat-num" data-page-node-id="OUDGbFdiQ2xjkR7o8zUhy8">9</span><span class="stat-label" data-page-node-id="bzHol9VFD4hqxRz6Ch7AUO">AI · 国际重点</span></a>
+    <a href="#sec-3" class="stat-pill" style="--c:#f59e0b" data-page-node-id="BdByNAf9gJwa0rrW3G7mSr"><span class="stat-num" data-page-node-id="ZJv28P7BJEd1IZiRKAAEjA">9</span><span class="stat-label" data-page-node-id="hqRCcpP9fkCyVCsb913Tmt">国内要闻</span></a>
+    <a href="#sec-4" class="stat-pill" style="--c:#10b981" data-page-node-id="DWzDs4CFSpWEZJT1kQLioR"><span class="stat-num" data-page-node-id="r8vxsytUOhvvbZHGpBn7Mp">9</span><span class="stat-label" data-page-node-id="W5Ejj7TbQrSkfb3uNvzAhW">国际视野</span></a>
+    <a href="#sec-5" class="stat-pill" style="--c:#ec4899" data-page-node-id="Y7Osg4oJicPFIbtGWjUTGP"><span class="stat-num" data-page-node-id="ObEZ0Ts7WMWi49xsvZhHOG">9</span><span class="stat-label" data-page-node-id="rQJpXhYxBVnIlEVAMTlPIN">文娱八卦</span></a>
+    <a href="#sec-6" class="stat-pill" style="--c:#14b8a6" data-page-node-id="EXCLQ74BlMPqRHNShro5zT"><span class="stat-num" data-page-node-id="lGJ6qHBHXEbY20L3M51CBP">9</span><span class="stat-label" data-page-node-id="D8Jc3xBMPAvigJjatwsq7L">轻松一刻</span></a>
+    <a href="#sec-7" class="stat-pill" style="--c:#f97316" data-page-node-id="C9ArsS4NVLkIr7A25AdylJ"><span class="stat-num" data-page-node-id="RM8YsGl4cchShM97f6QeYK">3</span><span class="stat-label" data-page-node-id="Ec27kaRqzyuIMpNbC6TZP3">生活提醒</span></a>
+    <a href="#sec-8" class="stat-pill" style="--c:#f5576c" data-page-node-id="YpPYw334FZkPDDFUpU8ZXA"><span class="stat-num" data-page-node-id="apwWX4QDc1jgtL77Xaxl9G">6</span><span class="stat-label" data-page-node-id="LXxQru4BkHfSXNQv1VN0xX">推荐</span></a>
+  </div>
+</nav><main class="main" data-page-node-id="bxDDY5vO1dwANVTlhvgQTW">
+  <section class="section" id="sec-0" data-page-node-id="FamCHkNehupbPuMR6EQp5A">
+    <div class="sec-head" data-page-node-id="7oy5zPHgObldF29AxBJuvq">
+      <span class="sec-badge" style="background:#ef4444" data-page-node-id="izZGelBuwTItU6X6rHycHo">①</span>
+      <h2 class="sec-title" data-page-node-id="MO7ikGXWeDQ94bGmrGpWZL">📍 本地生活<span class="sec-count" data-page-node-id="WGvPfsF8oYEM7r5QlVZfy3">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="elmLuWs36H0rxnHvRtazb0">郑州本地奇闻趣事与热门话题，身边的新鲜与温度</p>
+    <div class="cards" data-page-node-id="Ibzwn21cwGrcNrrY1aXHAn">
+    <article class="card" data-page-node-id="RBucuN6fTpiIybghgqLcxo">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="2m91JUEGg6UJn6qvaMA0sV">1</div>
+      <h3 class="card-title" data-page-node-id="OL2aMg76HkJ3L0cYTWKrQF"><a href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" title="9月2日郑州热力集团消息，郑州新增19个供热小区，报装用热建筑面积159.81万平方米，将在2026-2027供热期予以供热，惠及更多居民温暖过冬。" data-page-node-id="SL4Pvqa2KGuPVlmaRDtKNm">郑州新增19个供热小区 2026-2027供热期予以供热</a></h3>
+      <p class="card-summary" title="9月2日郑州热力集团消息，郑州新增19个供热小区，报装用热建筑面积159.81万平方米，将在2026-2027供热期予以供热，惠及更多居民温暖过冬。" data-page-node-id="ojyzVq55x8fIzRLgfsUILA">9月2日郑州热力集团消息，郑州新增19个供热小区，报装用热建筑面积159.81万平方米，将在2026-2027供热期予以供热，惠及更多居民温暖过冬。</p>
+      <div class="card-foot" data-page-node-id="YVm2WQ0wf6j7pnvXyg44CC">
+        <span class="foot-left" data-page-node-id="mbO1ViSwd3OVJW0vFLY1Rj"><span class="chip" data-page-node-id="YAZOhB84fmsknPtuEI1lzk">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="mEtGAsGzlnMBtaNvvxYuyP">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="inqTcKq1EdnlY3lTEusbUl">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="8Nb9qD0nwiPxhIDwTgUM9p">2</div>
+      <h3 class="card-title" data-page-node-id="6hKBL8COTL6XFUcoBV482r"><a href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" title="记者实探：郑州火车站东西广场地下人行通道——南联通通道将于9月7日开通，360米通道快速步行仅3分40秒，彻底告别拖着行李绕行半小时的尴尬。" data-page-node-id="QLtbdqUNxPbDtbx9kmo3ge">郑州火车站东西广场地下通道9月7日正式开通</a></h3>
+      <p class="card-summary" title="记者实探：郑州火车站东西广场地下人行通道——南联通通道将于9月7日开通，360米通道快速步行仅3分40秒，彻底告别拖着行李绕行半小时的尴尬。" data-page-node-id="XfukPhumnbRPPIHDe9GZYM">记者实探：郑州火车站东西广场地下人行通道——南联通通道将于9月7日开通，360米通道快速步行仅3分40秒，彻底告别拖着行李绕行半小时的尴尬。</p>
+      <div class="card-foot" data-page-node-id="axAfPfsmmhnFBTeuLIwaC5">
+        <span class="foot-left" data-page-node-id="FDJcpE9oUFFuNirVzYxwHW"><span class="chip" data-page-node-id="XyjH3e5hK2GiXNccjNosZ5">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="bUtKfpSAmRe0CevmOTTMy0">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="9HxF9HHNYENJFxup40XfXQ">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="U3yt29BC2JQackWhalcHqU">3</div>
+      <h3 class="card-title" data-page-node-id="uuzAXLBUGaYhEcqD6jT6s0"><a href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" title="国家统计局河南调查总队消息，9月5日至25日将组织开展2026年全国时间利用调查现场调查，河南同步开展，请居民如实填报。" data-page-node-id="5ZzDSVGFOVCBLeWVpxfCAp">河南9月5日至25日开展全国时间利用调查</a></h3>
+      <p class="card-summary" title="国家统计局河南调查总队消息，9月5日至25日将组织开展2026年全国时间利用调查现场调查，河南同步开展，请居民如实填报。" data-page-node-id="2NZqtuv5rt28o3XpWZXxs5">国家统计局河南调查总队消息，9月5日至25日将组织开展2026年全国时间利用调查现场调查，河南同步开展，请居民如实填报。</p>
+      <div class="card-foot" data-page-node-id="H8BdNuU8bWmmaA3oB3m0kz">
+        <span class="foot-left" data-page-node-id="AEHqHiJimtGzgVsvkgsh5C"><span class="chip" data-page-node-id="ZXamRicHUgurOMTqNnsbE5">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="NZkLeYeei1YEOqdGR9c33H">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="paAHCvXZcZBtakosiFCSUQ">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="gUA9QEonuHJAH8vx5SBT9a">4</div>
+      <h3 class="card-title" data-page-node-id="wagmsOP9zwC8GWZJTGy3bG"><a href="https://zfbzj.zhengzhou.gov.cn/bzxzf/10236270.jhtml" target="_blank" rel="noopener noreferrer" title="2026年郑州市第七批保障性租赁住房配租公告发布，定于9月8日09:00在“郑好办”APP“郑好住·保租房”模块线上选房配租，面向在郑新市民、青年人等群体。" data-page-node-id="TUF8yb0yH1lmzEy1nvnb3K">郑州第七批保障性租赁住房9月8日上线配租</a></h3>
+      <p class="card-summary" title="2026年郑州市第七批保障性租赁住房配租公告发布，定于9月8日09:00在“郑好办”APP“郑好住·保租房”模块线上选房配租，面向在郑新市民、青年人等群体。" data-page-node-id="EClCjP5MccVZAnVFE6oDRd">2026年郑州市第七批保障性租赁住房配租公告发布，定于9月8日09:00在“郑好办”APP“郑好住·保租房”模块线上选房配租，面向在郑新市民、青年人等群体。</p>
+      <div class="card-foot" data-page-node-id="eaGPe70rdHv5QkfXqMEutD">
+        <span class="foot-left" data-page-node-id="o0Ly13QmQp5ycVqfYIyoFn"><span class="chip" data-page-node-id="k5wbFIxrEskEgsgHOHMWMO">郑州市住房保障局</span></span>
+        <a class="read-original" href="https://zfbzj.zhengzhou.gov.cn/bzxzf/10236270.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="MCsX4hQBEqfpTTDE00XDFb">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="ZyHZ74AMYpk07FQkK0AzbV">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="uDEM6lQAXHFC6niPF1QGOC">5</div>
+      <h3 class="card-title" data-page-node-id="iU6dhICqdfQD3VkDlDol4o"><a href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" title="胖东来创始人于东来发布经营数据：2026年前8个月销售额超过195亿元，同比增长26.98%，其中超市业态销售额达107亿元，时代广场门店超44亿元居首。" data-page-node-id="SacPRehTWiB70P0MsGMW3M">胖东来前8个月销售额超195亿元 同比增长26.98%</a></h3>
+      <p class="card-summary" title="胖东来创始人于东来发布经营数据：2026年前8个月销售额超过195亿元，同比增长26.98%，其中超市业态销售额达107亿元，时代广场门店超44亿元居首。" data-page-node-id="En6KJJ0KaXaHvCez7QRpKA">胖东来创始人于东来发布经营数据：2026年前8个月销售额超过195亿元，同比增长26.98%，其中超市业态销售额达107亿元，时代广场门店超44亿元居首。</p>
+      <div class="card-foot" data-page-node-id="g4NFcIjo39CfQWAvdHqqb6">
+        <span class="foot-left" data-page-node-id="76Rbq7CaBIWoXrov0ZEG77"><span class="chip" data-page-node-id="8HyZ7q3WnM6eWAuP9M2ja3">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="iFjsmIbBfPkH5JgjMdxsXz">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="z1f8GpnOGWRkeblA7kbzSJ">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="ZZbBbtSSZU1hZDck4zLLvB">6</div>
+      <h3 class="card-title" data-page-node-id="AIXaBUOdHkxltyoZUVk8YE"><a href="https://www.zzjkq.gov.cn/zwdt/10235827.jhtml" target="_blank" rel="noopener noreferrer" title="9月2日郑州经开区市场监管局联合教育文化体育局召开2026年秋季学期校园食品安全工作部署暨培训会，120余人参会，守护师生“舌尖上的安全”。" data-page-node-id="4aVCjKtOlxNx3Dv55YPnSt">郑州经开区召开秋季校园食品安全部署培训会</a></h3>
+      <p class="card-summary" title="9月2日郑州经开区市场监管局联合教育文化体育局召开2026年秋季学期校园食品安全工作部署暨培训会，120余人参会，守护师生“舌尖上的安全”。" data-page-node-id="7V2RGZt7D3fJTG0Wgop499">9月2日郑州经开区市场监管局联合教育文化体育局召开2026年秋季学期校园食品安全工作部署暨培训会，120余人参会，守护师生“舌尖上的安全”。</p>
+      <div class="card-foot" data-page-node-id="SBTpfvoxwF2Jjo5ntLxHWQ">
+        <span class="foot-left" data-page-node-id="UvZLJwWEmdw9y0889YgbEm"><span class="chip" data-page-node-id="F8e1uiURMQP8TNpl9BDcHv">郑州经开区</span></span>
+        <a class="read-original" href="https://www.zzjkq.gov.cn/zwdt/10235827.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="4HE5T7sb046qtd0TK4Ymut">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="YKMtjkkPtNQOO3LAB6rG4f">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="XXVVRj4fWef96NHmcQCTzz">7</div>
+      <h3 class="card-title" data-page-node-id="ReRsxHyo8ocHeGEZQnfcGr"><a href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" title="北京证券交易所设立五周年之际上市公司达339家，其中河南北交所上市公司数量为15家，与湖北并列中部六省第一位。" data-page-node-id="jJi2JwqudA21gtugj62WbE">河南北交所上市企业达15家 领跑中部六省</a></h3>
+      <p class="card-summary" title="北京证券交易所设立五周年之际上市公司达339家，其中河南北交所上市公司数量为15家，与湖北并列中部六省第一位。" data-page-node-id="kFH0pV3LJWbV2oePe3KPrL">北京证券交易所设立五周年之际上市公司达339家，其中河南北交所上市公司数量为15家，与湖北并列中部六省第一位。</p>
+      <div class="card-foot" data-page-node-id="9ikpSYe6Js0ypUPSPuGGW2">
+        <span class="foot-left" data-page-node-id="OIX4kTsqh3J5wwY1mk9vH5"><span class="chip" data-page-node-id="uGiFc6u3l7SkGPr0oBQo22">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1071652069_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="bGEtpwO6CN0RhRbQk6A3H4">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="XCnxWba58frn5zwwN9axAK">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="fQkKVHqHxVFifpm4iljRtg">8</div>
+      <h3 class="card-title" data-page-node-id="ojBMXfRxSiDQmBovffTWwE"><a href="https://www.sohu.com/a/1070739480_120575855" target="_blank" rel="noopener noreferrer" title="车主注意：9月20日（周日）调休正常上班，当日限行尾号2和7；9月25日（周五）中秋节郑州不限行，请合理安排出行。" data-page-node-id="Km06xpm9LqjsE4d9CV5PT4">本月郑州限行尾号有调整 9月20日限2和7</a></h3>
+      <p class="card-summary" title="车主注意：9月20日（周日）调休正常上班，当日限行尾号2和7；9月25日（周五）中秋节郑州不限行，请合理安排出行。" data-page-node-id="4wK4tCstOn0QQOEpDO21QA">车主注意：9月20日（周日）调休正常上班，当日限行尾号2和7；9月25日（周五）中秋节郑州不限行，请合理安排出行。</p>
+      <div class="card-foot" data-page-node-id="upHPp0WLXuYLDpxrcwqyiQ">
+        <span class="foot-left" data-page-node-id="aE0YoWG9qsFdXcmgzk692Z"><span class="chip" data-page-node-id="sEAFwM1T2tcN8kYRu0Zb3K">郑州发布</span></span>
+        <a class="read-original" href="https://www.sohu.com/a/1070739480_120575855" target="_blank" rel="noopener noreferrer" data-page-node-id="mupnsbSxma3zyNJQ0x7YFn">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="dLJwWhfcKDS8GuLKAeVlRo">
+      <div class="card-num" style="background:#ef4444" data-page-node-id="CfB3AguxRty2SxCiNKAPvp">9</div>
+      <h3 class="card-title" data-page-node-id="rFn9AeASu8wbJEiVIVSycB"><a href="https://www.zhengzhou.gov.cn/news1/10234917.jhtml" target="_blank" rel="noopener noreferrer" title="9月2日、3日省委常委、市委书记安伟调研城市运营支撑服务型国企平台，强调锚定特大城市健康有序运行和民生需求，高质量支撑保障城市发展。" data-page-node-id="COVEXU872IQ6hvh8ZoFfHd">郑州市委书记安伟调研城市运营服务型国企平台</a></h3>
+      <p class="card-summary" title="9月2日、3日省委常委、市委书记安伟调研城市运营支撑服务型国企平台，强调锚定特大城市健康有序运行和民生需求，高质量支撑保障城市发展。" data-page-node-id="hzmBtyuyIWpPZohRD554VE">9月2日、3日省委常委、市委书记安伟调研城市运营支撑服务型国企平台，强调锚定特大城市健康有序运行和民生需求，高质量支撑保障城市发展。</p>
+      <div class="card-foot" data-page-node-id="bXPrGsgWs709K5mYFIwbsi">
+        <span class="foot-left" data-page-node-id="cgaGJQM22YLHilP3tScY3Y"><span class="chip" data-page-node-id="G1NRZdX7MXWq37izLhm9Xa">郑州市政府</span></span>
+        <a class="read-original" href="https://www.zhengzhou.gov.cn/news1/10234917.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="f0meACV9g83F0olZgN7pAm">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-1" data-page-node-id="Uic7z7PinCrhjHyvzFV5uG">
+    <div class="sec-head" data-page-node-id="cCzxkX6QYX6B1DAD0doInA">
+      <span class="sec-badge" style="background:#2563eb" data-page-node-id="QerOYJs5HfItGtEecVciyC">②</span>
+      <h2 class="sec-title" data-page-node-id="OxVxs5C1IPnds2KSGsE9Fh">🇨🇳 AI · 国内重点<span class="sec-count" data-page-node-id="zXBSAm5oFah8G4zA4dIleL">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="T2FVG6NwuwPFBmxiDjELZ4">创业邦式简报：只讲关键动作与影响。BATJ、小米、千问、字节、华为、智谱等国内 AI 与大厂动态</p>
+    <div class="cards" data-page-node-id="f8Ziz8R7rWLTqBwTUSZTeI">
+    <article class="card" data-page-node-id="fATCR21eRjFiz7wpTMBAxB">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="FcSYohDeqJnvwQnIJopBKX">1</div>
+      <h3 class="card-title" data-page-node-id="Cbc1fnrafpB9EY4hAuaH3i"><a href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月2日阿里升级旗舰模型 Qwen3.8-Max 至0902版本，经编程与办公专项后训练，在 Code Arena 前端编程总榜以1691分登顶，每百万Tokens均价约5美元。" data-page-node-id="chBckiIhnzF7LuOU0FBidy">阿里升级旗舰模型 Qwen3.8-Max 登顶 Code Arena 前端编程榜</a></h3>
+      <p class="card-summary" title="9月2日阿里升级旗舰模型 Qwen3.8-Max 至0902版本，经编程与办公专项后训练，在 Code Arena 前端编程总榜以1691分登顶，每百万Tokens均价约5美元。" data-page-node-id="8pChxEg0rAjxNP2SIGiaeG">9月2日阿里升级旗舰模型 Qwen3.8-Max 至0902版本，经编程与办公专项后训练，在 Code Arena 前端编程总榜以1691分登顶，每百万Tokens均价约5美元。</p>
+      <div class="card-foot" data-page-node-id="5D5SLQXyU6O4QSKfWNeYs0">
+        <span class="foot-left" data-page-node-id="waq91jtqDm0RK4DCT1pCyP"><span class="chip" data-page-node-id="UM8aOOB0fjLCGV6fKNlThh">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="BQYbh2RuyMELzUxROuBIza">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="R9L5PNAFYbst0G0VhTpACU">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="mKFO8vhCm7HfytRMzRnAYU">2</div>
+      <h3 class="card-title" data-page-node-id="fIfvXaW5Bi5yDOOrOS5vaY"><a href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月2日腾讯在深圳发布 WorkBuddy 生态开放平台，首批引入超百家生态伙伴，9款联名智能硬件亮相，定位面向 Agent 时代的操作系统。" data-page-node-id="oAERRzkz73bKFEi7nR0yNX">腾讯 WorkBuddy 开放平台正式上线 引入超百家生态伙伴</a></h3>
+      <p class="card-summary" title="9月2日腾讯在深圳发布 WorkBuddy 生态开放平台，首批引入超百家生态伙伴，9款联名智能硬件亮相，定位面向 Agent 时代的操作系统。" data-page-node-id="tvUxxpgUOs10CkEXmWH3AA">9月2日腾讯在深圳发布 WorkBuddy 生态开放平台，首批引入超百家生态伙伴，9款联名智能硬件亮相，定位面向 Agent 时代的操作系统。</p>
+      <div class="card-foot" data-page-node-id="6KgL7uX7wvW5IfcTHbIhPi">
+        <span class="foot-left" data-page-node-id="MHydTJqRaM91To1KIsJ18f"><span class="chip" data-page-node-id="fpwS48mASmVFHupF4cWTCV">北京商报</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="hHKRSSneN0qCc7vPDNBJ79">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="VHjmZAEAefVuaCepBYAhZC">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="nu3M9UOW3YOE3VvLv6dXQu">3</div>
+      <h3 class="card-title" data-page-node-id="6CUxfC12qmWQeIBpxhlpL0"><a href="https://new.qq.com/rain/a/20260902A07F9Z00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月1日腾讯混元推出 Hy4 preview 轻量版，通过自研 Sherry 稀疏三值量化算法将权重从近1.5TB压缩至约214GB，异构设备可联合推理。" data-page-node-id="Cy5ZBSUShni4aFtYC6iuc2">腾讯混元 Hy4 preview 轻量版开源 权重压缩至约214GB</a></h3>
+      <p class="card-summary" title="9月1日腾讯混元推出 Hy4 preview 轻量版，通过自研 Sherry 稀疏三值量化算法将权重从近1.5TB压缩至约214GB，异构设备可联合推理。" data-page-node-id="etUHXMojHP3bD5tH8Zxi7F">9月1日腾讯混元推出 Hy4 preview 轻量版，通过自研 Sherry 稀疏三值量化算法将权重从近1.5TB压缩至约214GB，异构设备可联合推理。</p>
+      <div class="card-foot" data-page-node-id="sjmi7G7VymH58h7dvciAnG">
+        <span class="foot-left" data-page-node-id="Ygqen7Nmv1UQfYqG57mraZ"><span class="chip" data-page-node-id="mxECVRKH5StBEjoGMRrcyM">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260902A07F9Z00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="7C5CB3sAEOvczTcK3jbfL5">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="ZpGUAqbTI6DPOnZr1WWQ3F">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="YviZKGuiOMGrq8pSOPPJFT">4</div>
+      <h3 class="card-title" data-page-node-id="u1lBKaZDiDnLpfFvB48il2"><a href="https://www.toutiao.com/article/7680725803948278335/" target="_blank" rel="noopener noreferrer" title="9月1日阿里云公告，百炼平台对北京地域 Qwen3-VL-Rerank 模型计费下调：文本输入降至0.5元/百万tokens，多模态输入同步下调。" data-page-node-id="BUjCa9PfEGU1rIXveNzbwE">阿里云 Qwen3-VL-Rerank 模型宣布降价</a></h3>
+      <p class="card-summary" title="9月1日阿里云公告，百炼平台对北京地域 Qwen3-VL-Rerank 模型计费下调：文本输入降至0.5元/百万tokens，多模态输入同步下调。" data-page-node-id="5ALEs0t3rqY9UTON33wepp">9月1日阿里云公告，百炼平台对北京地域 Qwen3-VL-Rerank 模型计费下调：文本输入降至0.5元/百万tokens，多模态输入同步下调。</p>
+      <div class="card-foot" data-page-node-id="Ri3k4SKVKhhtbZMPL3qg2q">
+        <span class="foot-left" data-page-node-id="eFdm3PhEQ2DDcWbkuZZpyW"><span class="chip" data-page-node-id="ta89iebDkORDj2jtkOqkWB">界面新闻</span></span>
+        <a class="read-original" href="https://www.toutiao.com/article/7680725803948278335/" target="_blank" rel="noopener noreferrer" data-page-node-id="tuBywrW8V0hnYZbRrCaoyu">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="3KdhaBefowX4XLRz31SoMG">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="sPYan6CQBBmqindsY1H9Xa">5</div>
+      <h3 class="card-title" data-page-node-id="5m0lSuQgw7wxeJYRoqkxzj"><a href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月2日阿里云旗下多角色 Agent 协作平台“万有无界”开启公测，支持项目空间、群聊协作与资产沉淀，可调用旗舰模型 Qwen3.8-Max。" data-page-node-id="oFtCfd9M0a6baK2RIIKtsq">阿里云企业级 Agent 平台“万有无界”开启公测</a></h3>
+      <p class="card-summary" title="9月2日阿里云旗下多角色 Agent 协作平台“万有无界”开启公测，支持项目空间、群聊协作与资产沉淀，可调用旗舰模型 Qwen3.8-Max。" data-page-node-id="I9vG2lZXn7R70zW4vkQHbU">9月2日阿里云旗下多角色 Agent 协作平台“万有无界”开启公测，支持项目空间、群聊协作与资产沉淀，可调用旗舰模型 Qwen3.8-Max。</p>
+      <div class="card-foot" data-page-node-id="ZZnxSZgr8WBRuQRNJu02BC">
+        <span class="foot-left" data-page-node-id="GZnYbYlX8swgmfJzW6VRRX"><span class="chip" data-page-node-id="Mu8N4wNoaWz8KY6nTwlc8C">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260903A07G4X00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="OlsSACFMCQWVTJm2jrG8mb">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="CrJq6lJ1SvEt4ULkmM0bAM">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="2N8yY17IXSnnEd4RFZFxEM">6</div>
+      <h3 class="card-title" data-page-node-id="U5JMUZFoY07amlW59mb4pO"><a href="https://new.qq.com/rain/a/20260902A0CV1W00" target="_blank" rel="noopener noreferrer" title="9月1日百度公告第二上市转双重主要上市生效，摘“S”标记、不融资，Q2 AI 收入占比连续两季过半，最快9月7日纳入港股通。" data-page-node-id="dnEGnBy1lYfR6ygwpOwWEE">百度完成港股双重主要上市 最快9月7日纳入港股通</a></h3>
+      <p class="card-summary" title="9月1日百度公告第二上市转双重主要上市生效，摘“S”标记、不融资，Q2 AI 收入占比连续两季过半，最快9月7日纳入港股通。" data-page-node-id="UgZ5E8t9Xb202fjE5G6Sch">9月1日百度公告第二上市转双重主要上市生效，摘“S”标记、不融资，Q2 AI 收入占比连续两季过半，最快9月7日纳入港股通。</p>
+      <div class="card-foot" data-page-node-id="H4p0qNTNAS7LuxrdBC8lkU">
+        <span class="foot-left" data-page-node-id="0F9DZJrW7bNFylpAKQS3hq"><span class="chip" data-page-node-id="LHEzyXtD7XXksHG9p9J0jT">商业数据派</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260902A0CV1W00" target="_blank" rel="noopener noreferrer" data-page-node-id="Ro2jCSrAh95r8rR7IeI0pD">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="fD3uraE8fGNxUWVjizkjFd">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="DNhqOXt1Cp5oeBC16YhmKL">7</div>
+      <h3 class="card-title" data-page-node-id="2obECOFFGA892zBpYDIeg6"><a href="https://new.qq.com/rain/a/20260902A03OQP00" target="_blank" rel="noopener noreferrer" title="9月2日消息，中兴通讯与字节跳动联合研发的全球首款 AI 智能体手机已完成合规流程，本月将正式上市，率先走完大模型备案到终端入网。" data-page-node-id="cZfcnB88APwtsvdiOEOGgf">字节与中兴联合研发全球首款 AI 智能体手机“豆包手机”将上市</a></h3>
+      <p class="card-summary" title="9月2日消息，中兴通讯与字节跳动联合研发的全球首款 AI 智能体手机已完成合规流程，本月将正式上市，率先走完大模型备案到终端入网。" data-page-node-id="X0nai8b2ZZrx1XHmCyJ9y6">9月2日消息，中兴通讯与字节跳动联合研发的全球首款 AI 智能体手机已完成合规流程，本月将正式上市，率先走完大模型备案到终端入网。</p>
+      <div class="card-foot" data-page-node-id="3QlFeRE63tQY2F1bI4cdlZ">
+        <span class="foot-left" data-page-node-id="w3ayxm3x02QVn2ObBmaW0i"><span class="chip" data-page-node-id="7GjgZBMtMsYTwzPKpiaFLi">科创板日报</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260902A03OQP00" target="_blank" rel="noopener noreferrer" data-page-node-id="5Z5oFrb6XfZssiH8O0R08j">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="oVA9AYDA3l1QISEV3vbCgF">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="EBlelGtrefd9BBoKhHoKWD">8</div>
+      <h3 class="card-title" data-page-node-id="fI6PoTez0NiwPaKTB4dGjr"><a href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" title="智谱创始人唐杰在业绩沟通会上表示下一代基座模型会继续扩大规模并对激活参数做管控；已实现10万级国产芯片规模化推理，单位Token成本较年初降80%。" data-page-node-id="JFZKOPFGhOTxJPYzC8SEoj">智谱回应“只会后训练”质疑 GLM-6.0 瞄准自进化</a></h3>
+      <p class="card-summary" title="智谱创始人唐杰在业绩沟通会上表示下一代基座模型会继续扩大规模并对激活参数做管控；已实现10万级国产芯片规模化推理，单位Token成本较年初降80%。" data-page-node-id="U01AntbzDeytH3jDxEx2aB">智谱创始人唐杰在业绩沟通会上表示下一代基座模型会继续扩大规模并对激活参数做管控；已实现10万级国产芯片规模化推理，单位Token成本较年初降80%。</p>
+      <div class="card-foot" data-page-node-id="wkKuNonDuCA7oHSGF40rM9">
+        <span class="foot-left" data-page-node-id="dm8OEQa0n1jBRuZAR45xVA"><span class="chip" data-page-node-id="TxVd9CFGVQSZFGfJmaChzm">CSDN</span></span>
+        <a class="read-original" href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" data-page-node-id="9K5tgl3wRfG7RsQEgCBYNw">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="8RUJDBhlZrneJfMVgeX44A">
+      <div class="card-num" style="background:#2563eb" data-page-node-id="YsefG2Bz6rU7E4bQfgDMhQ">9</div>
+      <h3 class="card-title" data-page-node-id="tBcyHpRgH4ZzHTWcztwwGV"><a href="https://new.qq.com/rain/a/20260902A05T5X00" target="_blank" rel="noopener noreferrer" title="9月2日小米官宣9月7日晚7点发布18 Fold折叠屏等，华为同日下午发 Mate XT 2 与鸿蒙7，苹果9月10日凌晨登场，三场集中在四天内。" data-page-node-id="AUfVxlG6ej2bE3hUaMy8cb">小米华为苹果发布会撞档 折叠屏最密集周来临</a></h3>
+      <p class="card-summary" title="9月2日小米官宣9月7日晚7点发布18 Fold折叠屏等，华为同日下午发 Mate XT 2 与鸿蒙7，苹果9月10日凌晨登场，三场集中在四天内。" data-page-node-id="J30Movmr38ltPraxBmE3f4">9月2日小米官宣9月7日晚7点发布18 Fold折叠屏等，华为同日下午发 Mate XT 2 与鸿蒙7，苹果9月10日凌晨登场，三场集中在四天内。</p>
+      <div class="card-foot" data-page-node-id="9jSll8XDyCRk8B3ExHfpG2">
+        <span class="foot-left" data-page-node-id="qUs30nawAFsaBBGBBgy9hR"><span class="chip" data-page-node-id="tqmFy5XaoHailR5ffdrqvc">TechWeb</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260902A05T5X00" target="_blank" rel="noopener noreferrer" data-page-node-id="oAp9UD61z7rrrqD0mTiunm">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-2" data-page-node-id="ELtf2ec3DcNUhRKi79BAg8">
+    <div class="sec-head" data-page-node-id="TBPzAfiUZ2hWH4O0KKoZVk">
+      <span class="sec-badge" style="background:#7c3aed" data-page-node-id="qwdBCmpwNg23hrmfluK4V0">③</span>
+      <h2 class="sec-title" data-page-node-id="bf1nvmVopP4hQ5oDZaN73M">🌍 AI · 国际重点<span class="sec-count" data-page-node-id="ChafsSsr5jIhFBWb8Hsg5k">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="6DDKj3QNHGu9DPsHe7Rc8l">海外头部动向：OpenAI、Anthropic/Claude、Google、xAI/马斯克、Meta、NVIDIA 等</p>
+    <div class="cards" data-page-node-id="moPDdh2c4mTlKnGhCIExWD">
+    <article class="card" data-page-node-id="RVDLdc2apalvFhqCGnsIik">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="cMV3EJCoc2PcDj8P1qLDsO">1</div>
+      <h3 class="card-title" data-page-node-id="CLjDDLW2haPNqgiKoVb8w1"><a href="https://aistart.ai/news?utm_source=jryx" target="_blank" rel="noopener noreferrer" title="Anthropic 发布 Claude Fable 5.1 与 Mythos 5.1，针对企业反馈下调价格，agent 场景最高便宜45%，缓存读取降价75%，并放宽过度严格的护栏限制。" data-page-node-id="ioaSPj6iKq2gz34OqPtDNg">Anthropic 发布 Claude Fable 5.1 最高降价45%</a></h3>
+      <p class="card-summary" title="Anthropic 发布 Claude Fable 5.1 与 Mythos 5.1，针对企业反馈下调价格，agent 场景最高便宜45%，缓存读取降价75%，并放宽过度严格的护栏限制。" data-page-node-id="EAiYBZG1jtIUKoWkzWFaiu">Anthropic 发布 Claude Fable 5.1 与 Mythos 5.1，针对企业反馈下调价格，agent 场景最高便宜45%，缓存读取降价75%，并放宽过度严格的护栏限制。</p>
+      <div class="card-foot" data-page-node-id="Wxu2DtJAh0wfRzmN6i0u9s">
+        <span class="foot-left" data-page-node-id="bG0umtacMgRbTCkL5BLdwj"><span class="chip" data-page-node-id="pwFqkwdEfjidd3UFLQofQo">AIStart</span></span>
+        <a class="read-original" href="https://aistart.ai/news?utm_source=jryx" target="_blank" rel="noopener noreferrer" data-page-node-id="xFJol8rLyZ3m9FHw7QJE7W">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="fAZNXgjyVzGI6BtvbPCxtF">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="oYoqJyKDB2XiAXIrxF1ZQr">2</div>
+      <h3 class="card-title" data-page-node-id="p2nMWPizYsHCqX9MkhwY5Q"><a href="https://www.thecodew.com/2026/09/openai-anthropic-google-meta-unleash-new-ai-models-fall-rush.html?m=1" target="_blank" rel="noopener noreferrer" title="OpenAI 预热的新模型 Astra 在测试中自主发现两处零日漏洞，成为首个触及 Preparedness Framework“Critical”网络安全阈值模型，仅向少数合作伙伴开放。" data-page-node-id="msFf67WZEM16UAWqBESQk3">OpenAI Astra 模型触及 Critical 网络安全阈值 限制访问</a></h3>
+      <p class="card-summary" title="OpenAI 预热的新模型 Astra 在测试中自主发现两处零日漏洞，成为首个触及 Preparedness Framework“Critical”网络安全阈值模型，仅向少数合作伙伴开放。" data-page-node-id="zul8NaRwRPnfXGNAI9g6B2">OpenAI 预热的新模型 Astra 在测试中自主发现两处零日漏洞，成为首个触及 Preparedness Framework“Critical”网络安全阈值模型，仅向少数合作伙伴开放。</p>
+      <div class="card-foot" data-page-node-id="VclfygHDOyYiSsxU4kYmDq">
+        <span class="foot-left" data-page-node-id="BjEeTRWaNSYzJ0kCZme1as"><span class="chip" data-page-node-id="RFpCtUOuZntGqTGTznGERz">The CODEW</span></span>
+        <a class="read-original" href="https://www.thecodew.com/2026/09/openai-anthropic-google-meta-unleash-new-ai-models-fall-rush.html?m=1" target="_blank" rel="noopener noreferrer" data-page-node-id="mHdjJFmcPIzlZH6WPzyaWJ">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="HkD9iLPsrJNC1M4gda5vAX">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="imckVVbsDxhz9DbgaKlvZl">3</div>
+      <h3 class="card-title" data-page-node-id="84Urc0ggqFBZFvnJcr6dYy"><a href="https://new.qq.com/rain/a/20260904A03C0W00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="美国时间9月3日早间起，OpenAI 的 ChatGPT、Anthropic 的 Claude、xAI 的 Grok 相继异常，Gemini 与 Copilot 中断报告同步上升，分析指向 Cloudflare 故障。" data-page-node-id="sNWKtrHiQXI7B19ZMuF2RQ">美国主流 AI 集体宕机 ChatGPT/Claude/Grok 9月3日异常</a></h3>
+      <p class="card-summary" title="美国时间9月3日早间起，OpenAI 的 ChatGPT、Anthropic 的 Claude、xAI 的 Grok 相继异常，Gemini 与 Copilot 中断报告同步上升，分析指向 Cloudflare 故障。" data-page-node-id="hqkjCPhJU2CQFFUtJVlf7O">美国时间9月3日早间起，OpenAI 的 ChatGPT、Anthropic 的 Claude、xAI 的 Grok 相继异常，Gemini 与 Copilot 中断报告同步上升，分析指向 Cloudflare 故障。</p>
+      <div class="card-foot" data-page-node-id="pFzAyBiL663ZyEZBJgQFtr">
+        <span class="foot-left" data-page-node-id="hPWtEpaRrGhERW3qvl9TLC"><span class="chip" data-page-node-id="HyY9r25g8x1lP0oilz5Q5v">科创板日报</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A03C0W00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="HlItIramclA44plklOqUmY">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="VYXLAy1txrfgTGzVSygDot">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="MoDRnH41uLCbkqmOAyVUxF">4</div>
+      <h3 class="card-title" data-page-node-id="Wjg7uayNd3w073ZCrwHkOG"><a href="https://new.qq.com/rain/a/20260904A03C0W00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月3日黄仁勋宣布英伟达以129.303亿美元收购 AI 开发平台 Hugging Face，交易完成后平台保持开放定位，HF 拥有超300万模型与1800万开发者。" data-page-node-id="NhO3C4Q2YooSuJyjJq3kGY">英伟达129亿美元收购 Hugging Face 锁定1800万开发者生态</a></h3>
+      <p class="card-summary" title="9月3日黄仁勋宣布英伟达以129.303亿美元收购 AI 开发平台 Hugging Face，交易完成后平台保持开放定位，HF 拥有超300万模型与1800万开发者。" data-page-node-id="z4dSBBJXyVKk5nj9lt8SAv">9月3日黄仁勋宣布英伟达以129.303亿美元收购 AI 开发平台 Hugging Face，交易完成后平台保持开放定位，HF 拥有超300万模型与1800万开发者。</p>
+      <div class="card-foot" data-page-node-id="8RzMY8ZVAM56ox9dcVvpfJ">
+        <span class="foot-left" data-page-node-id="77pVg3oTlI5YTll2zLKzCM"><span class="chip" data-page-node-id="DyRwVDDUj7vzG3rpptdsjG">腾讯科技</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A03C0W00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="Csil0QlnHzzCUgJYL9Y4Uc">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="3BIzwuBXopKL2vErqEhlqH">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="ICKH1dwjh8vn8E6BOGiau3">5</div>
+      <h3 class="card-title" data-page-node-id="ZADV4s94rrRxlGI1CgctZ0"><a href="https://www.oreilly.com/radar/radar-trends-to-watch-september-2026/" target="_blank" rel="noopener noreferrer" title="Meta 发布 Muse Spark 1.3，是五个月内第四个 Muse Spark 版本，xhigh 版在 Artificial Analysis Intelligence Index 得61分，面向 agentic 与科学推理。" data-page-node-id="NsSHMzbEZOmyvuHzFyuaK9">Meta 发布 Muse Spark 1.3 智能体与科学推理能力提升</a></h3>
+      <p class="card-summary" title="Meta 发布 Muse Spark 1.3，是五个月内第四个 Muse Spark 版本，xhigh 版在 Artificial Analysis Intelligence Index 得61分，面向 agentic 与科学推理。" data-page-node-id="5uVuV3xDwkRpBLkWGKab3r">Meta 发布 Muse Spark 1.3，是五个月内第四个 Muse Spark 版本，xhigh 版在 Artificial Analysis Intelligence Index 得61分，面向 agentic 与科学推理。</p>
+      <div class="card-foot" data-page-node-id="xJXg0Y0HEyCle5yB27BHWl">
+        <span class="foot-left" data-page-node-id="doPPs6By7aojpCnfEdD3tr"><span class="chip" data-page-node-id="VCS1oLEhHmG43dFU302I26">O&#x27;Reilly</span></span>
+        <a class="read-original" href="https://www.oreilly.com/radar/radar-trends-to-watch-september-2026/" target="_blank" rel="noopener noreferrer" data-page-node-id="bx5mxT2GxV8xYYOkOdyR2U">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="7qaOglWcpbJLxwiJac8hGi">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="CUQHeH30QGHLvCswCaemEN">6</div>
+      <h3 class="card-title" data-page-node-id="gY0SoDwQ3ERFGR2QqQG4Dg"><a href="https://www.oreilly.com/radar/radar-trends-to-watch-september-2026/" target="_blank" rel="noopener noreferrer" title="Google 发布 Gemini 3.7/3.8 Flash 系列，声称在编码与调试方面显著提升；同期 Google Pics 图像处理工具接入 Workspace。" data-page-node-id="OrIJFzx4DxlamSLampIoW2">Google 发布 Gemini 3.7/3.8 Flash 改进编程与调试</a></h3>
+      <p class="card-summary" title="Google 发布 Gemini 3.7/3.8 Flash 系列，声称在编码与调试方面显著提升；同期 Google Pics 图像处理工具接入 Workspace。" data-page-node-id="j4KeNCoVgwFnOfCT2CHwJp">Google 发布 Gemini 3.7/3.8 Flash 系列，声称在编码与调试方面显著提升；同期 Google Pics 图像处理工具接入 Workspace。</p>
+      <div class="card-foot" data-page-node-id="6krxLvkTUgjud0ZHLJPnLV">
+        <span class="foot-left" data-page-node-id="zBz4wrwKdIXvDjtw4zzWu3"><span class="chip" data-page-node-id="GkaqDM4TRU6QtzOYMqbTGC">O&#x27;Reilly</span></span>
+        <a class="read-original" href="https://www.oreilly.com/radar/radar-trends-to-watch-september-2026/" target="_blank" rel="noopener noreferrer" data-page-node-id="W9tzzzw5p2ibP2V4yBfcf7">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="9TMQjGPZjIOj5NHSkeDJwR">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="951EUzTxvJCcQtDPD5riq7">7</div>
+      <h3 class="card-title" data-page-node-id="mFnS9SG6lcBdDc0RT92s8E"><a href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" title="OpenAI 宣布 ChatGPT Ads 年化收入运行率达到10亿美元并全球扩张，成为继订阅与企业版后的第三大收入支柱，C 端商业化广告路径跑通。" data-page-node-id="7CGDxOPlidMTp8k3czsilO">OpenAI ChatGPT 广告年化收入突破10亿美元</a></h3>
+      <p class="card-summary" title="OpenAI 宣布 ChatGPT Ads 年化收入运行率达到10亿美元并全球扩张，成为继订阅与企业版后的第三大收入支柱，C 端商业化广告路径跑通。" data-page-node-id="gcqgYaMARxmIYq8p4mXCI1">OpenAI 宣布 ChatGPT Ads 年化收入运行率达到10亿美元并全球扩张，成为继订阅与企业版后的第三大收入支柱，C 端商业化广告路径跑通。</p>
+      <div class="card-foot" data-page-node-id="Hgru8Kt1D2TAovAwaEMOfi">
+        <span class="foot-left" data-page-node-id="8HjVLw5hHJYNoIlIruG71d"><span class="chip" data-page-node-id="kiD1KZrdMo11HAJkDvzFhV">CSDN</span></span>
+        <a class="read-original" href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" data-page-node-id="Iy3RfvyDi4ZvRH3ZqHNSIF">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="XEumoxV2LmV402GSISsZ9h">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="O3vG9axR8XzOacVpXw8frn">8</div>
+      <h3 class="card-title" data-page-node-id="7wu5853MPZ1d8bGe2Wd4I2"><a href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" title="xAI 推出 Grok 政府专用版本并上线美国国防部平台，面向政府安全场景做专门安全加固，AI 厂商加速切入政务与国防市场。" data-page-node-id="tLFpfxicHiCRb7C9UDcPyP">xAI Grok 政府专用版本上线美国国防部平台</a></h3>
+      <p class="card-summary" title="xAI 推出 Grok 政府专用版本并上线美国国防部平台，面向政府安全场景做专门安全加固，AI 厂商加速切入政务与国防市场。" data-page-node-id="SoMdnKmazdItCwItuO8geV">xAI 推出 Grok 政府专用版本并上线美国国防部平台，面向政府安全场景做专门安全加固，AI 厂商加速切入政务与国防市场。</p>
+      <div class="card-foot" data-page-node-id="cadHyB1WYa2knSISTbiTwT">
+        <span class="foot-left" data-page-node-id="ebuUjqUVsVWwP7okj22uGs"><span class="chip" data-page-node-id="vQFrxt4S10LqpqqF6Q3Cmt">CSDN</span></span>
+        <a class="read-original" href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" data-page-node-id="QIwiUQoJGkgOyV8ZUjn0zS">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="oGjvUb976qlZ2SBG8IW0B4">
+      <div class="card-num" style="background:#7c3aed" data-page-node-id="XczuR7z6sbu2gKgWzqOubJ">9</div>
+      <h3 class="card-title" data-page-node-id="rG2EzQ6ii0KsBmGwL5Ovmd"><a href="https://new.qq.com/rain/a/20260904A02X0G00" target="_blank" rel="noopener noreferrer" title="据《商业内幕》报道，Meta CEO 扎克伯格此前与特朗普通话，对仿照 FINRA 设立全国性 AI 监管机构的提议表达担忧，白宫已向主要 AI 公司介绍方案。" data-page-node-id="sA2mryCTe7Ye8ra8N3ldJk">扎克伯格反对设立全国 AI 监管机构</a></h3>
+      <p class="card-summary" title="据《商业内幕》报道，Meta CEO 扎克伯格此前与特朗普通话，对仿照 FINRA 设立全国性 AI 监管机构的提议表达担忧，白宫已向主要 AI 公司介绍方案。" data-page-node-id="DREOOGfAJwi4ayNQzx2bwj">据《商业内幕》报道，Meta CEO 扎克伯格此前与特朗普通话，对仿照 FINRA 设立全国性 AI 监管机构的提议表达担忧，白宫已向主要 AI 公司介绍方案。</p>
+      <div class="card-foot" data-page-node-id="1cHIOKCWVh5lP4YbKY8wUN">
+        <span class="foot-left" data-page-node-id="wWClC7CMfKqeSkulsCXSaI"><span class="chip" data-page-node-id="O8QE5LmeEjtFT00OCleAsr">凤凰网</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02X0G00" target="_blank" rel="noopener noreferrer" data-page-node-id="a7UnbBeSZ9yBjdtG3fi51X">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-3" data-page-node-id="PH09e4BZcZJucmDxuOsxqr">
+    <div class="sec-head" data-page-node-id="Y43uldkAz1ccSbWLcKNOcr">
+      <span class="sec-badge" style="background:#f59e0b" data-page-node-id="p5Og3Px3x2vkKVLiJ72PG5">④</span>
+      <h2 class="sec-title" data-page-node-id="Mwdts5vYxvlNr2EqWKjykF">🏛️ 国内要闻<span class="sec-count" data-page-node-id="TCpzoT6nr15zyNV8cqPgxg">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="GO7Cs40KrsnFWmZZ6wkqXm">国内时事 / 社会 / 政策热点</p>
+    <div class="cards" data-page-node-id="iIn0aJyCizyFlBPtuAeToL">
+    <article class="card" data-page-node-id="KwD2u1qOuc41JlAHjNj8U2">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="eYXpbx6tiEfbHb8AIOOHWc">1</div>
+      <h3 class="card-title" data-page-node-id="XdPult9vUSOuVM7xLYOiDV"><a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" title="工信部等10部门印发《促进中小企业发展“十五五”规划》，到2030年规上中小企业人均营收累计增长15%左右，专精特新“小巨人”达2.2万家。" data-page-node-id="eBaHzEohyEewdEUCdCESg6">促进中小企业发展“十五五”规划发布</a></h3>
+      <p class="card-summary" title="工信部等10部门印发《促进中小企业发展“十五五”规划》，到2030年规上中小企业人均营收累计增长15%左右，专精特新“小巨人”达2.2万家。" data-page-node-id="rAldS1tADLOHqGQtGdtsSH">工信部等10部门印发《促进中小企业发展“十五五”规划》，到2030年规上中小企业人均营收累计增长15%左右，专精特新“小巨人”达2.2万家。</p>
+      <div class="card-foot" data-page-node-id="6AMaCfZfGHjy1ltsfWqBbZ">
+        <span class="foot-left" data-page-node-id="IZtAyE0yevXNATnTa5TLY2"><span class="chip" data-page-node-id="sLqZESOc32Ps5Zn6USt0Db">腾讯新闻</span></span>
+        <a class="read-original" href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" data-page-node-id="KPpHKRNvLBhZ0Ib72zDi4Y">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="YEWjaCsUhczCYcn4b4sWVb">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="O2nspCWqusAhxKKWF5A5KO">2</div>
+      <h3 class="card-title" data-page-node-id="GmYue8DKycfmEFw1ryToMj"><a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" title="国家医保局公布按病组和病种分值付费3.0版方案，为机器人辅助手术单独设立支付分组，让医院更敢尝试先进技术，惠及患者。" data-page-node-id="Eog4zvSfAlrbPMCZ75bxax">国家医保局：机器人辅助手术单独设立支付分组</a></h3>
+      <p class="card-summary" title="国家医保局公布按病组和病种分值付费3.0版方案，为机器人辅助手术单独设立支付分组，让医院更敢尝试先进技术，惠及患者。" data-page-node-id="aM6E5DdtNQARgtd58OMqdR">国家医保局公布按病组和病种分值付费3.0版方案，为机器人辅助手术单独设立支付分组，让医院更敢尝试先进技术，惠及患者。</p>
+      <div class="card-foot" data-page-node-id="HRbbovMBAofTNQcvcglZuL">
+        <span class="foot-left" data-page-node-id="WnWh1zOq0GYicsKJZw1z2Z"><span class="chip" data-page-node-id="EkyAjZQifw6tiVVGX84w9A">腾讯新闻</span></span>
+        <a class="read-original" href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" data-page-node-id="0kX5RCUISrQBi3bu63h9H8">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="HDVd24swMqwwnROWLypGfK">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="BSP1XAxhPtClWz3SB87cxC">3</div>
+      <h3 class="card-title" data-page-node-id="HSm4qnsuFYFM6lwMl9RvnY"><a href="https://www.thepaper.cn/newsDetail_forward_33987684" target="_blank" rel="noopener noreferrer" title="9月1日起，AI客服协同国标实施、微短剧分类备案管理、《国家基本药物目录(2026年版)》扩容至794种、著作权司法解释修改等多领域新规落地。" data-page-node-id="36ju7YTbkz8PlqQKfIJgIl">9月起一批新规施行 AI客服国标/微短剧备案/基药目录扩容</a></h3>
+      <p class="card-summary" title="9月1日起，AI客服协同国标实施、微短剧分类备案管理、《国家基本药物目录(2026年版)》扩容至794种、著作权司法解释修改等多领域新规落地。" data-page-node-id="N9P3kW7gHZYrjtKV44gCkJ">9月1日起，AI客服协同国标实施、微短剧分类备案管理、《国家基本药物目录(2026年版)》扩容至794种、著作权司法解释修改等多领域新规落地。</p>
+      <div class="card-foot" data-page-node-id="xNhwsul9BwPvenCFppNEpX">
+        <span class="foot-left" data-page-node-id="QFqywvraS12TINYBDelwnt"><span class="chip" data-page-node-id="DJ0ZJfzxtXH6ZSH7JLxcUe">澎湃新闻</span></span>
+        <a class="read-original" href="https://www.thepaper.cn/newsDetail_forward_33987684" target="_blank" rel="noopener noreferrer" data-page-node-id="zmNLj5rMBFfAqYXgqgk8H5">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="BuGeYG8Ow6oNWwV48VNFRQ">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="vzvqzZC0CFi5Yh8higTpDs">4</div>
+      <h3 class="card-title" data-page-node-id="FUneDG3UNEoLNFHGgGmChw"><a href="https://www.thepaper.cn/newsDetail_forward_33982374" target="_blank" rel="noopener noreferrer" title="《国务院关于修改〈住房公积金管理条例〉的决定》9月20日起施行，新增装修、支付物业费等提取情形，贷款审批时限由15日缩短至10日。" data-page-node-id="DGbBylePuUXNCDG7qXgrN1">住房公积金管理条例修订 9月20日起施行</a></h3>
+      <p class="card-summary" title="《国务院关于修改〈住房公积金管理条例〉的决定》9月20日起施行，新增装修、支付物业费等提取情形，贷款审批时限由15日缩短至10日。" data-page-node-id="vKfQaDa17NfhdRbtnV5cqT">《国务院关于修改〈住房公积金管理条例〉的决定》9月20日起施行，新增装修、支付物业费等提取情形，贷款审批时限由15日缩短至10日。</p>
+      <div class="card-foot" data-page-node-id="1MJsQKQxDn2Ux3qHdR1Sp3">
+        <span class="foot-left" data-page-node-id="7NnZ9d9MApUofeYaCxjkcZ"><span class="chip" data-page-node-id="6HT4ooBzd7buRyJh0OyL4y">澎湃新闻</span></span>
+        <a class="read-original" href="https://www.thepaper.cn/newsDetail_forward_33982374" target="_blank" rel="noopener noreferrer" data-page-node-id="qIhiAP8E7niopuQeL6zhdB">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="FXNO1YfclO7sIG6ziBsSNE">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="jRGlZ43UTjy0f7FZQzCNkb">5</div>
+      <h3 class="card-title" data-page-node-id="orxbVyoCthvaxkDMxuydni"><a href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" title="国家卫健委等部门发布的《国家基本药物目录(2026年版)》9月1日起实施，共收录794种药品，新增聚焦慢性病与常见病，扩大儿童适宜药品。" data-page-node-id="7Ug4US70rrHTUcIaeaaLFt">新版国家基本药物目录实施 共收录794种</a></h3>
+      <p class="card-summary" title="国家卫健委等部门发布的《国家基本药物目录(2026年版)》9月1日起实施，共收录794种药品，新增聚焦慢性病与常见病，扩大儿童适宜药品。" data-page-node-id="p8DhSGH3LzituPgwOJKT6C">国家卫健委等部门发布的《国家基本药物目录(2026年版)》9月1日起实施，共收录794种药品，新增聚焦慢性病与常见病，扩大儿童适宜药品。</p>
+      <div class="card-foot" data-page-node-id="1oTldHtWDd6yKyNg0PNDSD">
+        <span class="foot-left" data-page-node-id="2JCf9JGrdKJ7eN5dtbjHd5"><span class="chip" data-page-node-id="cYlpokv3ilqIFVaFxF46wH">央视新闻</span></span>
+        <a class="read-original" href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" data-page-node-id="rSYGqPiXEkGnvJAIFjt0Tj">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="GePUK1HJMFnNbrPDg42zWx">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="4t5CCGBOuRbKhfAHlXYqCd">6</div>
+      <h3 class="card-title" data-page-node-id="YqBlmTFCt3BOHEDu5GBcFB"><a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" title="全国市场监管执法稽查工作座谈会明确，将继续深化“幽灵外卖”专项整治，协同推进扫黑除恶、打击电诈等专项工作，守护群众舌尖安全。" data-page-node-id="vhgz0MU8LxAUrTCkFuxJtB">市场监管总局深化“幽灵外卖”专项整治</a></h3>
+      <p class="card-summary" title="全国市场监管执法稽查工作座谈会明确，将继续深化“幽灵外卖”专项整治，协同推进扫黑除恶、打击电诈等专项工作，守护群众舌尖安全。" data-page-node-id="wLc3cEWcRClchvjLe9LnNt">全国市场监管执法稽查工作座谈会明确，将继续深化“幽灵外卖”专项整治，协同推进扫黑除恶、打击电诈等专项工作，守护群众舌尖安全。</p>
+      <div class="card-foot" data-page-node-id="xa1OVIJvQq7RgL9ek8aCIW">
+        <span class="foot-left" data-page-node-id="vYJCesU1SsfytTpmkFlhWA"><span class="chip" data-page-node-id="IkG0mo4gK5pGOT2zVEibYc">腾讯新闻</span></span>
+        <a class="read-original" href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" data-page-node-id="jmx6Me49viuDjLTrVxTf1C">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="LOk8EqVeq5fTpPAHHT5ExE">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="nh5vuwJQmtlHsaFBpRFzLI">7</div>
+      <h3 class="card-title" data-page-node-id="9yWJqCTolHXuiEQlERSTeb"><a href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" title="自然资源部消息，安徽宣城茶亭地区铜金矿勘查取得重大突破，初步估算铜潜在资源超数个大型铜矿规模，金超十余个大型金矿规模。" data-page-node-id="nr5xeT1W4AWmvYKobCnxgA">我国铜金矿勘查获重大突破 华东有望新形成大型基地</a></h3>
+      <p class="card-summary" title="自然资源部消息，安徽宣城茶亭地区铜金矿勘查取得重大突破，初步估算铜潜在资源超数个大型铜矿规模，金超十余个大型金矿规模。" data-page-node-id="HyJH6c8wckjCHonNyff8QA">自然资源部消息，安徽宣城茶亭地区铜金矿勘查取得重大突破，初步估算铜潜在资源超数个大型铜矿规模，金超十余个大型金矿规模。</p>
+      <div class="card-foot" data-page-node-id="Nbs02296rhLM60w2S28tRr">
+        <span class="foot-left" data-page-node-id="5mMsOboY6sLs5wvlWupvey"><span class="chip" data-page-node-id="miaWPDWKhKmdoY2Pxbcd0M">央视新闻</span></span>
+        <a class="read-original" href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" data-page-node-id="qBkbHIpUD4kf7m38CpfB12">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="YOLmKazGHPXzksGIjEHAQ7">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="vC15isCdKXnNGJwDpbw8as">8</div>
+      <h3 class="card-title" data-page-node-id="3Yt6CYfeEGbDzE2IM8ZYBH"><a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" title="监测结果显示，2025年全国学生总体近视率为49.9%，较2018年（53.6%）累计下降3.7个百分点，近五年呈连续下降态势。" data-page-node-id="2REJkFICbPNPjZLfoXU6lt">全国学生总体近视率近五年连续下降 2025年为49.9%</a></h3>
+      <p class="card-summary" title="监测结果显示，2025年全国学生总体近视率为49.9%，较2018年（53.6%）累计下降3.7个百分点，近五年呈连续下降态势。" data-page-node-id="qLdxZHFIBLywFHneqDl9IW">监测结果显示，2025年全国学生总体近视率为49.9%，较2018年（53.6%）累计下降3.7个百分点，近五年呈连续下降态势。</p>
+      <div class="card-foot" data-page-node-id="KSW6SyECrYz7BHFaFNJmVD">
+        <span class="foot-left" data-page-node-id="Mp3qXBSWkBypiaILvkVEyr"><span class="chip" data-page-node-id="9AjAAgKDnqtqjfGdEByWh7">腾讯新闻</span></span>
+        <a class="read-original" href="https://so.html5.qq.com/page/real/search_news?docid=70000021_7826a99f7b106352" target="_blank" rel="noopener noreferrer" data-page-node-id="DmfrfY0jOu5M1gBBdpVTJq">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="5VQvburYrZM0LSFGGNbYen">
+      <div class="card-num" style="background:#f59e0b" data-page-node-id="gNIqaK4E4IoYXgBQvIjRrf">9</div>
+      <h3 class="card-title" data-page-node-id="U8ysaFedym8L5yID4n8XHL"><a href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" title="据海关统计，今年前7个月我国对埃及进出口951.9亿元，同比增长18.7%，其中进口埃及农产品同比增82.6%，埃及成我国冷冻草莓进口第一大来源地。" data-page-node-id="vTsLpJnJRkSOCayLoBWYIL">今年前7个月我国对埃及进出口同比增长18.7%</a></h3>
+      <p class="card-summary" title="据海关统计，今年前7个月我国对埃及进出口951.9亿元，同比增长18.7%，其中进口埃及农产品同比增82.6%，埃及成我国冷冻草莓进口第一大来源地。" data-page-node-id="qZmywoqcFenCpwzxrcdb64">据海关统计，今年前7个月我国对埃及进出口951.9亿元，同比增长18.7%，其中进口埃及农产品同比增82.6%，埃及成我国冷冻草莓进口第一大来源地。</p>
+      <div class="card-foot" data-page-node-id="Set9wzDPVAGmHMyei4lVpm">
+        <span class="foot-left" data-page-node-id="UkNiElMQXlyP4WHaLg0JxM"><span class="chip" data-page-node-id="BuRJnwDbHf1lO8qECXhIw8">央视新闻</span></span>
+        <a class="read-original" href="https://tv.cctv.com/2026/09/02/VIDEEAlTJSVeSS1qxUkbA2wf260902.shtml" target="_blank" rel="noopener noreferrer" data-page-node-id="tz2pD7je5VY6pC82zQ8cNh">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-4" data-page-node-id="1gFsLP32dqBawePepnOo3i">
+    <div class="sec-head" data-page-node-id="GVAE2PQebBzusnJoIwMg88">
+      <span class="sec-badge" style="background:#10b981" data-page-node-id="LGnaLQb7BbjKcLzLfk015K">⑤</span>
+      <h2 class="sec-title" data-page-node-id="HIEL0P7uVJBnasEGyAHmr3">🌐 国际视野<span class="sec-count" data-page-node-id="PFAvYEMpWCqtY42tnwSlBU">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="FmP8m0wL2RCAOjot5FX8mO">国际重大时事</p>
+    <div class="cards" data-page-node-id="weAK7p9K9D7GZmH7bbRiQn">
+    <article class="card" data-page-node-id="uhGzu97qauHIoli1SJwIaK">
+      <div class="card-num" style="background:#10b981" data-page-node-id="OxCHdC7JL0KBhEzZVq4bwB">1</div>
+      <h3 class="card-title" data-page-node-id="TK4uI9BOBZEDcrNWOtA2h9"><a href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="伊朗卫生部9月3日宣布，自8月30日以来美军袭击已致伊朗142人受伤、18人死亡；以防长称若遭袭将打击伊所有基础设施，联合国秘书长呼吁停火。" data-page-node-id="jEgfohmUxkQXF2L4TEnMuU">美军近期袭击已致伊朗18死142伤 霍尔木兹局势紧张</a></h3>
+      <p class="card-summary" title="伊朗卫生部9月3日宣布，自8月30日以来美军袭击已致伊朗142人受伤、18人死亡；以防长称若遭袭将打击伊所有基础设施，联合国秘书长呼吁停火。" data-page-node-id="bwYnozd3GT32FeHoCEPZP3">伊朗卫生部9月3日宣布，自8月30日以来美军袭击已致伊朗142人受伤、18人死亡；以防长称若遭袭将打击伊所有基础设施，联合国秘书长呼吁停火。</p>
+      <div class="card-foot" data-page-node-id="uH6iA4akAW1pkbMvo7qC3K">
+        <span class="foot-left" data-page-node-id="YX8GUWCSeiPcB6TQyp1D7G"><span class="chip" data-page-node-id="IdNvUOCLk5JmjJtzY7SB7F">央视新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="d4YTG6RISo6xhPbjOopbEL">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="FjDGQbqeGCIfsQWNI45jYZ">
+      <div class="card-num" style="background:#10b981" data-page-node-id="htnftvwa11pHAl2p9IreD2">2</div>
+      <h3 class="card-title" data-page-node-id="CPRgN24RqH7T8MDhLvv8QN"><a href="https://www.toutiao.com/article/7681059907717579270/" target="_blank" rel="noopener noreferrer" title="9月2日特朗普称美军对伊新一轮打击“随时准备再次发动”；伊朗方面称新战略将“摧毁敌方根基”，霍尔木兹海峡“违规船只”名单增至57艘。" data-page-node-id="WMu1S3ECqFMr5CMD8YpuWi">特朗普威胁“随时”准备再袭伊朗 伊朗更新违规船只名单</a></h3>
+      <p class="card-summary" title="9月2日特朗普称美军对伊新一轮打击“随时准备再次发动”；伊朗方面称新战略将“摧毁敌方根基”，霍尔木兹海峡“违规船只”名单增至57艘。" data-page-node-id="7DtzRlp3cBLYQqVsADCTXD">9月2日特朗普称美军对伊新一轮打击“随时准备再次发动”；伊朗方面称新战略将“摧毁敌方根基”，霍尔木兹海峡“违规船只”名单增至57艘。</p>
+      <div class="card-foot" data-page-node-id="jzOAOtHHPA28QRUek9OmD4">
+        <span class="foot-left" data-page-node-id="NttucNicmgGgzWZNdFtpsw"><span class="chip" data-page-node-id="MpSF3FywFohHCe5Aq8EPTy">央视新闻</span></span>
+        <a class="read-original" href="https://www.toutiao.com/article/7681059907717579270/" target="_blank" rel="noopener noreferrer" data-page-node-id="mjoLaPtN9ePRB5HDyLWAtu">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="1FnPeGkTZnFBgFW4v81Zb8">
+      <div class="card-num" style="background:#10b981" data-page-node-id="EPn5cJ8TwHEUPY4dG6nHts">3</div>
+      <h3 class="card-title" data-page-node-id="ioMz3IsYHVFdBDQzuHaBIa"><a href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="尼泊尔警方9月3日公布，泥石流灾害遇难人数升至1290人；尼泊尔外长表示衷心感谢危难时刻中方慷慨驰援，中尼同为气候变化受影响国。" data-page-node-id="Y9Rx9f1VOaVeKuzgdWiZiZ">尼泊尔泥石流遇难人数升至1290人 尼外长感谢中方驰援</a></h3>
+      <p class="card-summary" title="尼泊尔警方9月3日公布，泥石流灾害遇难人数升至1290人；尼泊尔外长表示衷心感谢危难时刻中方慷慨驰援，中尼同为气候变化受影响国。" data-page-node-id="aqW0XDEBG679eFjTP3PwmQ">尼泊尔警方9月3日公布，泥石流灾害遇难人数升至1290人；尼泊尔外长表示衷心感谢危难时刻中方慷慨驰援，中尼同为气候变化受影响国。</p>
+      <div class="card-foot" data-page-node-id="4yXOJfpmKutyDdwxv5j68R">
+        <span class="foot-left" data-page-node-id="AeIh5E5RpOCNhePTklCDhQ"><span class="chip" data-page-node-id="2g36mztufJLMkmuitZeCrD">央视新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="y7Q4PQ3BEUZimSFgzp4J5I">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="iltWodDeHASLSvsDEGx3Rz">
+      <div class="card-num" style="background:#10b981" data-page-node-id="OSqgOucmKNL3gh61SJXjjA">4</div>
+      <h3 class="card-title" data-page-node-id="NAi1DadbMAmk4Ke4fpS7P7"><a href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="荷兰央行2日公布，今年3月至8月将约86吨黄金储备从美国纽约和加拿大渥太华转移至英国伦敦以分散风险，多国“去美元化”动作引发关注。" data-page-node-id="8vXPFrkZYqEfLAuGA5T7Mf">多国从美国运回黄金 专家称美元体系面临信任危机</a></h3>
+      <p class="card-summary" title="荷兰央行2日公布，今年3月至8月将约86吨黄金储备从美国纽约和加拿大渥太华转移至英国伦敦以分散风险，多国“去美元化”动作引发关注。" data-page-node-id="ZlmPI3pC0vC1BIJyZHGSzL">荷兰央行2日公布，今年3月至8月将约86吨黄金储备从美国纽约和加拿大渥太华转移至英国伦敦以分散风险，多国“去美元化”动作引发关注。</p>
+      <div class="card-foot" data-page-node-id="UxQBBCeDumaZxNTI98XCrT">
+        <span class="foot-left" data-page-node-id="tm2JV8ibeB16Y4MlglTVfx"><span class="chip" data-page-node-id="FqGXnkswKS3wr0OU1ewDky">央视新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="LIr0TYNlxvfgbtByD7ZpAd">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="Tq9KHr1B5QgVAI7krJJCKu">
+      <div class="card-num" style="background:#10b981" data-page-node-id="HGupSIe0VtLJcgTchmitaW">5</div>
+      <h3 class="card-title" data-page-node-id="G6h4R0uFwm6fVqumoCSWkK"><a href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="韩国、新西兰已连续加息，日本、欧洲和英国加息预期升温；市场聚焦9月4日晚美国8月非农，CME显示美联储9月加息25基点概率约60%。" data-page-node-id="ugPaD91LGZU5FEdXNObsvw">全球“加息潮”再起 美联储紧盯非农 多国长债收益率破位</a></h3>
+      <p class="card-summary" title="韩国、新西兰已连续加息，日本、欧洲和英国加息预期升温；市场聚焦9月4日晚美国8月非农，CME显示美联储9月加息25基点概率约60%。" data-page-node-id="mGR8Qwk2N3BBA7Fuijfzfx">韩国、新西兰已连续加息，日本、欧洲和英国加息预期升温；市场聚焦9月4日晚美国8月非农，CME显示美联储9月加息25基点概率约60%。</p>
+      <div class="card-foot" data-page-node-id="ITw9T0AB6HBHMkW8KEsVvP">
+        <span class="foot-left" data-page-node-id="9Nfpn73kui7Z9y5nfdlBst"><span class="chip" data-page-node-id="ykCFPfOma6DQ0f7F5BiInW">每日经济新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="AbznTkXkck91V4otjy8DdA">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="DFOYi4i58rL75ZXwaw7c3h">
+      <div class="card-num" style="background:#10b981" data-page-node-id="ewaAFq56HFFLSCUtrJILGH">6</div>
+      <h3 class="card-title" data-page-node-id="sPNPfbY0pzOafvsuN4CsCE"><a href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月3日纽约轻质原油收于每桶91.30美元涨0.32%，布伦特收于95.52美元跌0.12%；中东冲突与霍尔木兹持续关闭带来的供应担忧主导波动。" data-page-node-id="vVUc4jgqsh53mD6jDEz64u">国际油价涨跌不一 中东供应担忧仍是核心变量</a></h3>
+      <p class="card-summary" title="9月3日纽约轻质原油收于每桶91.30美元涨0.32%，布伦特收于95.52美元跌0.12%；中东冲突与霍尔木兹持续关闭带来的供应担忧主导波动。" data-page-node-id="X7QQEgpM2ZIqpcITwBRuoZ">9月3日纽约轻质原油收于每桶91.30美元涨0.32%，布伦特收于95.52美元跌0.12%；中东冲突与霍尔木兹持续关闭带来的供应担忧主导波动。</p>
+      <div class="card-foot" data-page-node-id="JEXg6D8xLVBwAYB6dJWTZ8">
+        <span class="foot-left" data-page-node-id="K0F8BZtmifAGd26s9GD2lK"><span class="chip" data-page-node-id="RhQ1PWCdmQUxKoJo9zkWpJ">新华社</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="i48IyVUMx36kMdKRlgqCnb">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="QMS60RWI1qWpJEG3NcqIrG">
+      <div class="card-num" style="background:#10b981" data-page-node-id="04fUF01MTGf74RZEbdXfOH">7</div>
+      <h3 class="card-title" data-page-node-id="CGMxQooYPA8bumryVvwkut"><a href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="伊拉克什叶派民兵武装“人民动员组织”9月3日发表声明，其位于基尔库克省的一处安全检查站当天遭恐怖袭击，造成一名成员死亡、一人受伤。" data-page-node-id="pFfHkHn0EBWFipuY1oK4w5">伊拉克北部检查站遭恐袭 致一名民兵死亡</a></h3>
+      <p class="card-summary" title="伊拉克什叶派民兵武装“人民动员组织”9月3日发表声明，其位于基尔库克省的一处安全检查站当天遭恐怖袭击，造成一名成员死亡、一人受伤。" data-page-node-id="E5t7FbBTVWKetw0Sm9rGfH">伊拉克什叶派民兵武装“人民动员组织”9月3日发表声明，其位于基尔库克省的一处安全检查站当天遭恐怖袭击，造成一名成员死亡、一人受伤。</p>
+      <div class="card-foot" data-page-node-id="tLHVamXi9F7Gej3vLPRJ3u">
+        <span class="foot-left" data-page-node-id="2tjWEDqDJ7vETSs7vYIrOq"><span class="chip" data-page-node-id="SkVAXOQASQoOadCvzb2MkF">央视新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="MqXjLcIjBfW28yJGVcwcF0">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="Chh5x3pxI0hxdAsxUHV5SZ">
+      <div class="card-num" style="background:#10b981" data-page-node-id="ahaGMGSNdrtJOwZmuCOTql">8</div>
+      <h3 class="card-title" data-page-node-id="qbWo60Wy77TCBFLVvx7RrS"><a href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="在日本防卫省大规模引进无人机背景下，日本陆上自卫队9月2日在与法国陆军的联合训练中，首次公开一款攻击型小型无人机。" data-page-node-id="VPU00tOIGxDjf3Kf5rV87J">日本自卫队首次公开一款攻击型无人机</a></h3>
+      <p class="card-summary" title="在日本防卫省大规模引进无人机背景下，日本陆上自卫队9月2日在与法国陆军的联合训练中，首次公开一款攻击型小型无人机。" data-page-node-id="yDzBMgfstCbV4B3WHELxxG">在日本防卫省大规模引进无人机背景下，日本陆上自卫队9月2日在与法国陆军的联合训练中，首次公开一款攻击型小型无人机。</p>
+      <div class="card-foot" data-page-node-id="BRgku0V0rFNOviqw7rm1mk">
+        <span class="foot-left" data-page-node-id="o970bTsN9e4szt354RljFN"><span class="chip" data-page-node-id="bLBBQXJYGcUUFdbUEZgHzS">央视新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02IM300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="scIdq2rWy3tqVuBfYG7NgX">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="Db8sCwnre2TzBwiEuiH1uR">
+      <div class="card-num" style="background:#10b981" data-page-node-id="Wp82Hz8a6djHbW727YSZmW">9</div>
+      <h3 class="card-title" data-page-node-id="d8Y3lqw926tEDRvH6ROE2g"><a href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="据多家媒体9月3日报道，一份法庭文件显示国际足联指责欧足联对其主席因凡蒂诺发起“抹黑运动”，欧足联已向美国法院申请取证。" data-page-node-id="B6xGyDspVe1LwILxzf61Ul">国际足联指责欧足联抹黑因凡蒂诺</a></h3>
+      <p class="card-summary" title="据多家媒体9月3日报道，一份法庭文件显示国际足联指责欧足联对其主席因凡蒂诺发起“抹黑运动”，欧足联已向美国法院申请取证。" data-page-node-id="vs3ccLXW1WBD2LKxsQGoRs">据多家媒体9月3日报道，一份法庭文件显示国际足联指责欧足联对其主席因凡蒂诺发起“抹黑运动”，欧足联已向美国法院申请取证。</p>
+      <div class="card-foot" data-page-node-id="zCRNOXzcqWwneOB2moKXzp">
+        <span class="foot-left" data-page-node-id="9ADcGgN6L8AknujOWmuszg"><span class="chip" data-page-node-id="J8nmZDjpjlDXo76KGWDTLM">财联社</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="RllAszt7GVr9E1K3yYjxd1">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-5" data-page-node-id="nqrpvylRb2FL3DyTOVjt2L">
+    <div class="sec-head" data-page-node-id="G8S9PE5YsVFXDgQXTbfg2K">
+      <span class="sec-badge" style="background:#ec4899" data-page-node-id="JLwfJCSGCERSeLLec8k0Gf">⑥</span>
+      <h2 class="sec-title" data-page-node-id="HLREdrYk9ym2X8I4LdsL1D">🎬 文娱八卦<span class="sec-count" data-page-node-id="rax2q0go25c9azPOUr3Rdd">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="eDBniMkfCSd6VLmgDEJY20">娱乐圈热点与轻松八卦</p>
+    <div class="cards" data-page-node-id="zRf3Pzbcnh7vMC96xjBasa">
+    <article class="card" data-page-node-id="3ANJ5YIcOfM9AwWSEI42LM">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="zGJbZC72VdaB5brEd663L3">1</div>
+      <h3 class="card-title" data-page-node-id="Zxc1miHgfNUqBj5Dh1e5Rw"><a href="https://new.qq.com/rain/a/20260904A09AGE00?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月4日魔术师刘谦被偶遇携妻子王希怡与7岁儿子外出聚餐，一家三口同框。刘谦2024年曾自曝肺腺癌，此次露面状态元气，网友感叹家庭温馨。" data-page-node-id="cqwqxLw4rQjj4cdAd7vTna">刘谦携妻儿聚餐 7岁儿子身高超父肩 抗癌康复状态元气</a></h3>
+      <p class="card-summary" title="9月4日魔术师刘谦被偶遇携妻子王希怡与7岁儿子外出聚餐，一家三口同框。刘谦2024年曾自曝肺腺癌，此次露面状态元气，网友感叹家庭温馨。" data-page-node-id="PpQ3jp2IzSa8TXforIj0pY">9月4日魔术师刘谦被偶遇携妻子王希怡与7岁儿子外出聚餐，一家三口同框。刘谦2024年曾自曝肺腺癌，此次露面状态元气，网友感叹家庭温馨。</p>
+      <div class="card-foot" data-page-node-id="spUlChy7VjzPTiPJoj0eWj">
+        <span class="foot-left" data-page-node-id="xQYAajAfFCcTNPHBCTE70k"><span class="chip" data-page-node-id="X6MTvdUzKAVemEH4d7qT8t">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A09AGE00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="PhU5M0PFP2xRQkxHI8ql2b">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="1oishoZtLNe5EkL3WC9Lpa">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="2qCyP2GxPFtq61hrUQREup">2</div>
+      <h3 class="card-title" data-page-node-id="a3z8fcvQpDnx51JzqsMs5d"><a href="https://weibo.com/7387669345/5338645776307109" target="_blank" rel="noopener noreferrer" title="9月1日王一博正式官宣云南白药牙膏全球品牌代言人，也是该品牌牙膏品类创立以来的首位全球代言人。" data-page-node-id="0PQIxAodTDQ4Eun1XqbJsP">王一博官宣云南白药牙膏全球品牌代言人</a></h3>
+      <p class="card-summary" title="9月1日王一博正式官宣云南白药牙膏全球品牌代言人，也是该品牌牙膏品类创立以来的首位全球代言人。" data-page-node-id="FSIBb2woBUtvwm2SmpeJUk">9月1日王一博正式官宣云南白药牙膏全球品牌代言人，也是该品牌牙膏品类创立以来的首位全球代言人。</p>
+      <div class="card-foot" data-page-node-id="85DJ6TS725s4y4DBjE6YAe">
+        <span class="foot-left" data-page-node-id="aa8lICeqLMSuH5JAbCBdw2"><span class="chip" data-page-node-id="HV9eN9VzsiEvuneLl4Po8K">微博</span></span>
+        <a class="read-original" href="https://weibo.com/7387669345/5338645776307109" target="_blank" rel="noopener noreferrer" data-page-node-id="ZVt4IgKsv808U2dU2h5Fr5">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="cqAkAyvpOYFNLkCIck7l2E">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="OVcwEP10JeiEXm1ZFDyECD">3</div>
+      <h3 class="card-title" data-page-node-id="oBfG2BbSAmS1Ca3HHAoem5"><a href="https://new.qq.com/rain/a/20260904A02SO300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月4日凌晨关晓彤与李均锐被拍到笑容满面、互动甜蜜，相关画面在腾讯新闻平台传播，被解读为情感共鸣信号。" data-page-node-id="RenkAANovTkL4h9pQIeO0G">关晓彤李均锐甜蜜互动引热议</a></h3>
+      <p class="card-summary" title="9月4日凌晨关晓彤与李均锐被拍到笑容满面、互动甜蜜，相关画面在腾讯新闻平台传播，被解读为情感共鸣信号。" data-page-node-id="koI8txQMYjyxj6Ws1ZP5Y9">9月4日凌晨关晓彤与李均锐被拍到笑容满面、互动甜蜜，相关画面在腾讯新闻平台传播，被解读为情感共鸣信号。</p>
+      <div class="card-foot" data-page-node-id="Ewbm9bpFJUk5moD1tMFTK6">
+        <span class="foot-left" data-page-node-id="y5IMZZRkB9XpdtJpCkjRRT"><span class="chip" data-page-node-id="a43Xhzf53aAMxx0Lht2O5L">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02SO300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="2CMpx5x0NtLvdoSMY5roSv">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="qRU2OAQ3WNp6rppgURK6uF">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="3SaGBRQKpQRSjk5mzpFkAT">4</div>
+      <h3 class="card-title" data-page-node-id="pMYFf7bOjBzssoASfE37Pn"><a href="https://www.douyin.com/video/7681329819551812883" target="_blank" rel="noopener noreferrer" title="9月3日晚韩媒称 BLACKPINK 成员朴彩英直接回绝国内某知名奶茶品牌开出的100亿韩元代言邀约，在抖音多账号转发，引发粉丝讨论。" data-page-node-id="h8WSMnyeIwAQ4Fm9rBXWP0">朴彩英回绝百亿韩元代言邀约 引发商业选择讨论</a></h3>
+      <p class="card-summary" title="9月3日晚韩媒称 BLACKPINK 成员朴彩英直接回绝国内某知名奶茶品牌开出的100亿韩元代言邀约，在抖音多账号转发，引发粉丝讨论。" data-page-node-id="WSwi1MHnGDDWaA1go90rIA">9月3日晚韩媒称 BLACKPINK 成员朴彩英直接回绝国内某知名奶茶品牌开出的100亿韩元代言邀约，在抖音多账号转发，引发粉丝讨论。</p>
+      <div class="card-foot" data-page-node-id="MIgEHjyttUFkcqiaEyn5AB">
+        <span class="foot-left" data-page-node-id="EoWIOaRuT8kPzcv6OReSdX"><span class="chip" data-page-node-id="wEqu1xBoYsLsVpLExTOEX6">抖音</span></span>
+        <a class="read-original" href="https://www.douyin.com/video/7681329819551812883" target="_blank" rel="noopener noreferrer" data-page-node-id="UIEn2Bp8sfndFVEbx43FpA">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="flCz3QqsJuE5UPj3A8hKak">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="mlrOpyvms6pDr2gVLleaMe">5</div>
+      <h3 class="card-title" data-page-node-id="PJuk93pCtxtxMCpZBpDRCx"><a href="https://c.m.163.com/news/a/L605I6PP0556BZBC.html" target="_blank" rel="noopener noreferrer" title="9月2日多家港媒报道，一间离岸公司将古天乐及其创办的电影公司告上香港法院，追讨1.49亿港元欠款。" data-page-node-id="3IYrJmTojpKYs7tRLeZKbJ">古天乐被追债1.49亿港元 多家港媒报道</a></h3>
+      <p class="card-summary" title="9月2日多家港媒报道，一间离岸公司将古天乐及其创办的电影公司告上香港法院，追讨1.49亿港元欠款。" data-page-node-id="o0b7SRGWEGNYo5QmQhrlhH">9月2日多家港媒报道，一间离岸公司将古天乐及其创办的电影公司告上香港法院，追讨1.49亿港元欠款。</p>
+      <div class="card-foot" data-page-node-id="bDGchV2RnVZOLCKLDPC0nz">
+        <span class="foot-left" data-page-node-id="4pv2HeczEaPT1BnOBvSsRv"><span class="chip" data-page-node-id="8cJCbgaIKBI7OfTFIiKIFe">网易新闻</span></span>
+        <a class="read-original" href="https://c.m.163.com/news/a/L605I6PP0556BZBC.html" target="_blank" rel="noopener noreferrer" data-page-node-id="eOBx7Bfyz5LS2Ie94i9W2h">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="QidVKwsKbixTa4GrUSCjHt">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="sJGQOqbpRM4GtcpbUGQklP">6</div>
+      <h3 class="card-title" data-page-node-id="7tIbZqdCRI94vZgS4DK47e"><a href="https://c.m.163.com/news/a/L605I6PP0556BZBC.html" target="_blank" rel="noopener noreferrer" title="坐拥3300万粉丝的网红博雅名下两家公司因偷税问题被税务部门处罚款347.7万余元，两家公司火速更名，本人账号仍在更新。" data-page-node-id="kRWDLqvDfvCaT4yns1G5Ei">网红博雅偷税被罚347.7万 两家公司更名</a></h3>
+      <p class="card-summary" title="坐拥3300万粉丝的网红博雅名下两家公司因偷税问题被税务部门处罚款347.7万余元，两家公司火速更名，本人账号仍在更新。" data-page-node-id="DLbbBS6X1JB9xDJI4U0f0B">坐拥3300万粉丝的网红博雅名下两家公司因偷税问题被税务部门处罚款347.7万余元，两家公司火速更名，本人账号仍在更新。</p>
+      <div class="card-foot" data-page-node-id="znjbyDbbQoFp3TmDKV5GqF">
+        <span class="foot-left" data-page-node-id="u7FnG7tiakmYxGpmsoYBVB"><span class="chip" data-page-node-id="c0U3XHhjDrGOpeK7dXMy50">网易新闻</span></span>
+        <a class="read-original" href="https://c.m.163.com/news/a/L605I6PP0556BZBC.html" target="_blank" rel="noopener noreferrer" data-page-node-id="XmJ3uxzHOZk8etcPzwF4mi">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="J0AgA6BX69rDFKZfzQ796i">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="ZBI7NtRCz9f3iaQzno2Vqq">7</div>
+      <h3 class="card-title" data-page-node-id="a3aoEphpF91a2VDhW7HTjN"><a href="https://www.toutiao.com/article/7681251473434477094/" target="_blank" rel="noopener noreferrer" title="刚办完太原生日演唱会，谢霆锋即赴青岛海尔总部洽谈锋味业务，被冒充商业演出的骗局牵连后仍收获路人好感，口碑逆势上涨。" data-page-node-id="tZWunXAyt6lzUHDvaHulaj">谢霆锋口碑逆势暴涨 踏实扑在事业获路人好感</a></h3>
+      <p class="card-summary" title="刚办完太原生日演唱会，谢霆锋即赴青岛海尔总部洽谈锋味业务，被冒充商业演出的骗局牵连后仍收获路人好感，口碑逆势上涨。" data-page-node-id="deO6bUQpv0IT42msddedcX">刚办完太原生日演唱会，谢霆锋即赴青岛海尔总部洽谈锋味业务，被冒充商业演出的骗局牵连后仍收获路人好感，口碑逆势上涨。</p>
+      <div class="card-foot" data-page-node-id="jt7M8E5O7WbvrAbb5OhZjk">
+        <span class="foot-left" data-page-node-id="ez7ZCthgnvYRcup4I144HO"><span class="chip" data-page-node-id="QDONIxoJ4uUGbQvnGS3jf4">今日头条</span></span>
+        <a class="read-original" href="https://www.toutiao.com/article/7681251473434477094/" target="_blank" rel="noopener noreferrer" data-page-node-id="afneKcI9HDH8sADuhbAHol">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="0AYJnAtzUg9C5NmW78G0Bq">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="pjicE2czBphg5kggrvKm3S">8</div>
+      <h3 class="card-title" data-page-node-id="Sr9xIZXi97xtw47s2f0G5x"><a href="https://new.qq.com/rain/a/20260904A02SO300?refer=cp_1009" target="_blank" rel="noopener noreferrer" title="9月3日张继科在直播中的言论被指“真敢说”，相关微博视频将其与娱乐圈话题关联传播，引发网友讨论。" data-page-node-id="hR6nwmQ32H0lYCTb0hGoW7">张继科直播言论引关注 被指“真敢说”</a></h3>
+      <p class="card-summary" title="9月3日张继科在直播中的言论被指“真敢说”，相关微博视频将其与娱乐圈话题关联传播，引发网友讨论。" data-page-node-id="fTuyx06VWgEompZfZTt5TC">9月3日张继科在直播中的言论被指“真敢说”，相关微博视频将其与娱乐圈话题关联传播，引发网友讨论。</p>
+      <div class="card-foot" data-page-node-id="XEewYDC8VyrzY8SAj8EhUq">
+        <span class="foot-left" data-page-node-id="XKrYnUVL3G5n3rYXEtBcfU"><span class="chip" data-page-node-id="xd59H5vh9RM5o6n4BgfJWj">腾讯新闻</span></span>
+        <a class="read-original" href="https://new.qq.com/rain/a/20260904A02SO300?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="LVv1MgH8D5bHtRTNGyko0f">阅读原文 ↗</a>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="ovrhPPdU02g8PYH69ZarJs">
+      <div class="card-num" style="background:#ec4899" data-page-node-id="EEWe1iBCwHtiN9Y9ERnRWE">9</div>
+      <h3 class="card-title" data-page-node-id="WJQt80Loxx20jPx4PZvHQU"><a href="https://weibo.com/7387669345/5338645776307109" target="_blank" rel="noopener noreferrer" title="剧集《重启心跳》拟邀关晓彤、李现，总导演顾长卫，围绕生命治愈、双向救赎展开叙事；同期王俊凯将官宣浪莎全球代言人。" data-page-node-id="ZYM2gZazY5LUkqkHTF9HDC">医疗剧《重启心跳》拟邀关晓彤李现 总导演顾长卫</a></h3>
+      <p class="card-summary" title="剧集《重启心跳》拟邀关晓彤、李现，总导演顾长卫，围绕生命治愈、双向救赎展开叙事；同期王俊凯将官宣浪莎全球代言人。" data-page-node-id="RGnUX4anuJ4l3ww0UXbZsL">剧集《重启心跳》拟邀关晓彤、李现，总导演顾长卫，围绕生命治愈、双向救赎展开叙事；同期王俊凯将官宣浪莎全球代言人。</p>
+      <div class="card-foot" data-page-node-id="BM7SnVUMFz13QE0O3s1Tcn">
+        <span class="foot-left" data-page-node-id="59f1ffFAkEnOklJsBDXhSQ"><span class="chip" data-page-node-id="FmE4ovaP86QFzFGcuc0AZ5">微博</span></span>
+        <a class="read-original" href="https://weibo.com/7387669345/5338645776307109" target="_blank" rel="noopener noreferrer" data-page-node-id="FLe4urGtDqDWTJkf3Fhflm">阅读原文 ↗</a>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-6" data-page-node-id="EDHyMkkx1Ny9eKleJvYgHl">
+    <div class="sec-head" data-page-node-id="sFoDJiQkLV6tFILTCJZgDx">
+      <span class="sec-badge" style="background:#14b8a6" data-page-node-id="Xvd1PfBiLJ4HIBk3nrz48p">⑦</span>
+      <h2 class="sec-title" data-page-node-id="gi0et2wE2fSnEzRs1p6q5a">😂 轻松一刻<span class="sec-count" data-page-node-id="4RRHBvBZKqThchkYa9G9EX">9 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="qvtijytVmoFHmQ2r8Db9Po">一个笑话、一段段子，给忙碌的一天一点松弛感</p>
+    <div class="cards" data-page-node-id="4LirG7RCw0h5HAPLecuRZI">
+    <article class="card fun-card" data-page-node-id="ky9buuSkxhGgOUc8wv8d0Y">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="zIgf2nnF8YigWwATYHqDBB">1</div>
+      <h3 class="card-title" data-page-node-id="XhUJVMwnQT7fD8Oa1cOmnP">神灯与老婆饼</h3>
+      <p class="card-summary" title="一个快饿死的人在沙漠捡到神灯，灯神说只能实现一个愿望。他说：“我要老婆……”灯神立刻变出个美女，不屑道：“都快饿死了还贪图美色！”说完消失。那人追了一句：“……饼。”然后就断了气——终究没享用上“老婆饼”。" data-page-node-id="1K1vmWZBoRbqSpDq421kAK">一个快饿死的人在沙漠捡到神灯，灯神说只能实现一个愿望。他说：“我要老婆……”灯神立刻变出个美女，不屑道：“都快饿死了还贪图美色！”说完消失。那人追了一句：“……饼。”然后就断了气——终究没享用上“老婆饼”。</p>
+      <div class="card-foot fun-foot" data-page-node-id="Fj9Bw3yaC35ehqjFsY8GuD">
+        <span class="foot-left" data-page-node-id="4EWgtyJBChno7LJk3CqVDB"><span class="chip" data-page-node-id="3jIVZX8fRytR0xLMB15pAi">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="wDQfKRp4bifCiwbzl0Mipw">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="IYZfP9PODJPr4H0Kvr86WB">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="omUBADxJgdlWxSOKp36ORv">2</div>
+      <h3 class="card-title" data-page-node-id="8kuk9nEQALzb49Wd0bFvbF">妈妈的逻辑永远赢</h3>
+      <p class="card-summary" title="我赖床说“我不饿”，老妈淡定：“你不饿，你的胃饿。”我懵了：“胃是我的，我不饿它怎么饿？”老妈：“你睡觉不动它一直工作，它累了也饿！你只顾自己睡不管胃死活，太自私。”我当场投降。" data-page-node-id="lB8shE9UfbnodKW5dblRGR">我赖床说“我不饿”，老妈淡定：“你不饿，你的胃饿。”我懵了：“胃是我的，我不饿它怎么饿？”老妈：“你睡觉不动它一直工作，它累了也饿！你只顾自己睡不管胃死活，太自私。”我当场投降。</p>
+      <div class="card-foot fun-foot" data-page-node-id="KTbDEIilrIPzpdWvHb8rxJ">
+        <span class="foot-left" data-page-node-id="idmQuJOFGjGUlVThqIS2gk"><span class="chip" data-page-node-id="lhsqJnOycxHMCDZid6ZeaN">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="3BndLNHBwFgcgWIARc9xBr">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="5FYgS74JLPj0McDLoFD1ni">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="9KKvZeam01vAhA5o1XwDgC">3</div>
+      <h3 class="card-title" data-page-node-id="oHfMDfEFtJftqz43AW8qEJ">外卖小哥的灵魂反问</h3>
+      <p class="card-summary" title="我备注“慢点送，不急，注意安全”，小哥提前送到，我夸“挺快呀”。他认真说：“我知道你不急，但我急。”我：“你急什么？”小哥：“我急着送完下一单，你的温柔不能耽误我的暴富。”我笑喷，递了瓶水。" data-page-node-id="wl56Z47Pml0DThaUJ178I8">我备注“慢点送，不急，注意安全”，小哥提前送到，我夸“挺快呀”。他认真说：“我知道你不急，但我急。”我：“你急什么？”小哥：“我急着送完下一单，你的温柔不能耽误我的暴富。”我笑喷，递了瓶水。</p>
+      <div class="card-foot fun-foot" data-page-node-id="vwq6Ixv6tBzwUQGB8tqC5z">
+        <span class="foot-left" data-page-node-id="p5sSc708KlcShHITq4tQ1P"><span class="chip" data-page-node-id="IH5OUwhCzwEkaMq4r63iIp">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="dbdbwrYO9KiQJooBcjtP6R">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="CwnXuejGjG9PstZLVgLfAQ">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="xuOQ6PIAgvTf62NS673YOY">4</div>
+      <h3 class="card-title" data-page-node-id="unYVEYnczo9ypVR3KHi0mb">企鹅的肚子为什么是白的</h3>
+      <p class="card-summary" title="你知道为什么企鹅的肚子是白的吗？因为手太短，洗不了后背，只能搓到肚子！——冷笑话·神转折。" data-page-node-id="zbxg5VVjXi5eyHwJWnGMaG">你知道为什么企鹅的肚子是白的吗？因为手太短，洗不了后背，只能搓到肚子！——冷笑话·神转折。</p>
+      <div class="card-foot fun-foot" data-page-node-id="FtTjQ6JTVKB4CnQ8rxeBUN">
+        <span class="foot-left" data-page-node-id="EuL3WrJj9zyvWGPg61naCB"><span class="chip" data-page-node-id="cC4Ii6tLNZnGcnQU37QYGY">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="Iv0bwdgIsyx2UnY5xDKARu">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="iYVIRhiWjhU5ts3A7uUwZ5">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="nHmLzHKjFg5YeqLJ1Am6e8">5</div>
+      <h3 class="card-title" data-page-node-id="0tKnO5zFSg3AGfIbFFbS4o">面试的诚实缺点</h3>
+      <p class="card-summary" title="面试老板问：“你有什么缺点？”我说：“我不够诚实。”老板不信：“不可能，你明明很诚实！”我笑：“所以我才说我不够诚实呀。”老板：“……你被录用了。”第二天问工资，我说：“我配得上一个亿。”老板：“好，我给你开三千，剩下的算你欠我的。”" data-page-node-id="Nh2GMqKY6HGs4Aw7ztgZjD">面试老板问：“你有什么缺点？”我说：“我不够诚实。”老板不信：“不可能，你明明很诚实！”我笑：“所以我才说我不够诚实呀。”老板：“……你被录用了。”第二天问工资，我说：“我配得上一个亿。”老板：“好，我给你开三千，剩下的算你欠我的。”</p>
+      <div class="card-foot fun-foot" data-page-node-id="fl36FmzuNaEHY1nPIn5pIi">
+        <span class="foot-left" data-page-node-id="DmtErvqWi2cHGwCNHHghmJ"><span class="chip" data-page-node-id="Cam2YlQLh1kOysgLlhnkZ8">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="a4WYfEsf0GvGjl3jBbcnHW">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="0FQ5k8OQBw8Ut1JV8iS24C">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="RKvdNnVCcjzmEVnAaPd2Iu">6</div>
+      <h3 class="card-title" data-page-node-id="2zaAhnAvxt2BzygovgN5My">佛系爱情</h3>
+      <p class="card-summary" title="我问佛：这世上可有真正的爱情？佛说：有的话我还出家？——人间真实·困笑话。" data-page-node-id="Jw8pUoZNg3180f7fj9nngP">我问佛：这世上可有真正的爱情？佛说：有的话我还出家？——人间真实·困笑话。</p>
+      <div class="card-foot fun-foot" data-page-node-id="YPCM7GKMobut1QiE8oNEAd">
+        <span class="foot-left" data-page-node-id="XN2LNGKawnvLUYGp13kuEC"><span class="chip" data-page-node-id="9HlFGj1vGgpBVyNYJmFuLx">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="j0CH3Do7UH0s7ampHrZfyF">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="oB5bNlbChfpTmZmdDUB8QI">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="cNqAEn9B2A8AVDu1x4ZuCo">7</div>
+      <h3 class="card-title" data-page-node-id="sSsVcSK8MfSWyv2R3grDXA">闹钟穿越法</h3>
+      <p class="card-summary" title="世界上最危险的事，莫过于把闹钟关掉后又闭上了眼睛。这是人类唯一可实行的穿越方法：闭眼5秒钟，就能抵达2个小时后的未来。" data-page-node-id="H6NgmQ6BBrNbVvXmJ81C6G">世界上最危险的事，莫过于把闹钟关掉后又闭上了眼睛。这是人类唯一可实行的穿越方法：闭眼5秒钟，就能抵达2个小时后的未来。</p>
+      <div class="card-foot fun-foot" data-page-node-id="9O37pOj8ce3r4iPTb6TFAE">
+        <span class="foot-left" data-page-node-id="el5FnoQEW7pDIHZ9k17IWK"><span class="chip" data-page-node-id="YzTMLZmATZDUEYLAfansZ4">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="G3f6ZADB1XoVC1P6zM0DOd">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="BMig5ZPXDee20gu2HLBOZE">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="BBe9UzxaEw48pGGXrKp24f">8</div>
+      <h3 class="card-title" data-page-node-id="U0W70WO58MlhZdmb6tCLNm">快递里的希望</h3>
+      <p class="card-summary" title="只要有快递还在路上，就感觉这生活还算有点希望。——人类本质·困笑话。" data-page-node-id="Y7g4KV8zRJDUuPFa00i44P">只要有快递还在路上，就感觉这生活还算有点希望。——人类本质·困笑话。</p>
+      <div class="card-foot fun-foot" data-page-node-id="vGl56h3VePeHF5JreoQkg3">
+        <span class="foot-left" data-page-node-id="RNhqGU5ntRtRkuHbYMmabv"><span class="chip" data-page-node-id="NwjEDrNvCOK2UVzbQdSasU">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="YKRCNx4nHFWd8VjIIvSSxp">轻松一刻</span>
+      </div>
+    </article>
+    <article class="card fun-card" data-page-node-id="SFsjo1ejilsc7hA1QM06qB">
+      <div class="card-num" style="background:#14b8a6" data-page-node-id="GJxyOvlMNSsD0xJ0H1wtjZ">9</div>
+      <h3 class="card-title" data-page-node-id="93cCN2S6vD6djU6AXMES5i">人类本质</h3>
+      <p class="card-summary" title="做人就是累，不然怎么能叫人类。手机摔了这么多次都没事，后来想想，还是我的身高救了它。" data-page-node-id="2nviBLASKtLXlqjSaZ86QE">做人就是累，不然怎么能叫人类。手机摔了这么多次都没事，后来想想，还是我的身高救了它。</p>
+      <div class="card-foot fun-foot" data-page-node-id="z0KWrDGxcBAhC4VbLSa9uZ">
+        <span class="foot-left" data-page-node-id="6qiM4EPbBjWS2epoidLhde"><span class="chip" data-page-node-id="J0YUzVkDlj7x6h219LJXjG">每日一笑</span></span>
+        <span class="fun-badge" data-page-node-id="MEAZGkM7srsVgqPbAS7n4Y">轻松一刻</span>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-7" data-page-node-id="OJPi9U9e5UH2nVNCzYgHLH">
+    <div class="sec-head" data-page-node-id="uYtU2NpZ1nJrVW3lpTJgqB">
+      <span class="sec-badge" style="background:#f97316" data-page-node-id="cSSbc9ul5DeGIDGIJV2fxF">⑧</span>
+      <h2 class="sec-title" data-page-node-id="1S4LqzPod3TBVlgPHfYEQH">☀️ 生活提醒<span class="sec-count" data-page-node-id="ZeE8gjlTakRYmDPjVSbq2B">3 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="eEDQobBnD5OBbN87dRK2v0">郑州今天天气、节气节日与一个小提醒，照顾好自己</p>
+    <div class="cards" data-page-node-id="jldBzB9jZBUYwElFWobYC7">
+    <article class="card" data-page-node-id="MrpmsvMRwC5uD0CEWbVdiO">
+      <div class="card-num" style="background:#f97316" data-page-node-id="KV7kWBGV4T7UDRvH6ABDom">1</div>
+      <h3 class="card-title" data-page-node-id="IQweNgRIZOxwiKqt4wT3d2">郑州今日天气</h3>
+      <p class="card-summary" title="今天21~31℃ 晴·东北风2-3级·秋高气爽；秋高气爽，未来三天郑州以晴到多云为主、气温21~32℃，但昼夜温差普遍超10℃，早晚凉意明显，请采用“洋葱穿衣法”灵活增减。河南受高压脊控制、空气干爽，但南部、东南部有6级左右阵风，户外活动注意防风；近期无降水、空气质量优，适宜洗车与通风。9月2—7日河南北部花粉浓度处高等级（4级），过敏人群外出戴口罩、归家清洁口鼻。生活提醒：9月7日火车站地下通道开通、9月8日保租房配租、9月20日（周日）调休上班限行2和7、9月25日中秋郑州不限行，车主与市民留意。" data-page-node-id="iAZIsaqa3wy90M3shCAg2D">今天21~31℃ 晴·东北风2-3级·秋高气爽；秋高气爽，未来三天郑州以晴到多云为主、气温21~32℃，但昼夜温差普遍超10℃，早晚凉意明显，请采用“洋葱穿衣法”灵活增减。河南受高压脊控制、空气干爽，但南部、东南部有6级左右阵风，户外活动注意防风；近期无降水、空气质量优，适宜洗车与通风。9月2—7日河南北部花粉浓度处高等级（4级），过敏人群外出戴口罩、归家清洁口鼻。生活提醒：9月7日火车站地下通道开通、9月8日保租房配租、9月20日（周日）调休上班限行2和7、9月25日中秋郑州不限行，车主与市民留意。</p>
+      <div class="card-foot" data-page-node-id="14fFHBLAF1RKobHSdGh5Se">
+        <span class="foot-left" data-page-node-id="fo5IjnpKq9d1WC4ZNq1UUg"><span class="chip" data-page-node-id="2JcpBOqTWiFnRn6RY8TtuX"></span></span>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="0wSIqGj4uJmw8nUTGbyeJS">
+      <div class="card-num" style="background:#f97316" data-page-node-id="00zH9wSvzw7oOphVL1zHRz">2</div>
+      <h3 class="card-title" data-page-node-id="TMEb3uUYS9DXg0FEcES8oe">节气 · 节日</h3>
+      <p class="card-summary" title="今日农历七月廿三；8月23日“处暑”已过，暑热渐退、秋意初临，本周郑州晴到多云、高温回落至30℃上下，真正的秋凉转折已到来。9月1日起新版国家基本药物目录（794种）正式施行、中小学秋季开学季开启，白露（9月7日前后）将至，注意作息与起居切换。夏秋换季、昼夜温差拉大，注意“洋葱式”穿衣防感冒。" data-page-node-id="pZ7dORaEIK6WzbVhhNP79s">今日农历七月廿三；8月23日“处暑”已过，暑热渐退、秋意初临，本周郑州晴到多云、高温回落至30℃上下，真正的秋凉转折已到来。9月1日起新版国家基本药物目录（794种）正式施行、中小学秋季开学季开启，白露（9月7日前后）将至，注意作息与起居切换。夏秋换季、昼夜温差拉大，注意“洋葱式”穿衣防感冒。</p>
+      <div class="card-foot" data-page-node-id="L8fjWxU4QyUU1Sqe0eKh3G">
+        <span class="foot-left" data-page-node-id="d3fwIcPXBCTLCOthIjrGsJ"><span class="chip" data-page-node-id="8KXmhhWsrqLIclBTDrXaIy"></span></span>
+      </div>
+    </article>
+    <article class="card" data-page-node-id="0dFpXnNYcFulChBPZTAbcw">
+      <div class="card-num" style="background:#f97316" data-page-node-id="7PZaNKnlEpfRyItEqbJEej">3</div>
+      <h3 class="card-title" data-page-node-id="oD5Hjl5fCDFY0dCUqJHp4O">轮转小提醒</h3>
+      <p class="card-summary" title="郑州火车站东西广场地下人行通道计划9月7日对外开放；9月1日起郑州地铁调整部分线路行车间隔；本周河南花粉浓度处高等级（9月2—7日），过敏人群外出戴口罩、归家清洁口鼻；清朗行动清理AI应用乱象信息561万余条、查处账号4.9万，使用AI工具注意合规；9月20日（周日）调休上班限行2和7、9月25日中秋郑州不限行，车主留意。" data-page-node-id="wArE767mzoyKoxU0hbe5pq">郑州火车站东西广场地下人行通道计划9月7日对外开放；9月1日起郑州地铁调整部分线路行车间隔；本周河南花粉浓度处高等级（9月2—7日），过敏人群外出戴口罩、归家清洁口鼻；清朗行动清理AI应用乱象信息561万余条、查处账号4.9万，使用AI工具注意合规；9月20日（周日）调休上班限行2和7、9月25日中秋郑州不限行，车主留意。</p>
+      <div class="card-foot" data-page-node-id="s9vG0GSmsZMKRUG9bkuxr0">
+        <span class="foot-left" data-page-node-id="vD12oRhnjbkobTLH0hDen4"><span class="chip" data-page-node-id="bXDuvUbxwFt2cf4yEEwFYo"></span></span>
+      </div>
+    </article>
+    </div>
+  </section>
+  <section class="section" id="sec-8" data-page-node-id="niVEBs2SUS2ljRkb2WoFHH">
+    <div class="sec-head" data-page-node-id="7EHHVIyzCz8Gs5mjQFywxF">
+      <span class="sec-badge" style="background:#f5576c" data-page-node-id="hyvGXdqAY8C7jk5fAAIYVa">⑨</span>
+      <h2 class="sec-title" data-page-node-id="vj2ryGmlQgGOiZqIZLKrXM">📑 推荐<span class="sec-count" data-page-node-id="9r7wJhYaBUKFRKv2nIJWvG">6 条</span></h2>
+    </div>
+    <p class="sec-intro" data-page-node-id="vjafeSaMFfBh0aHav7OkKX">你关注的微信公众号每日精选入口，一键直达最新文章</p>
+    <div class="rec-grid" data-page-node-id="W3bMjC4Fqd0mWCABXnEVgF">
+    <a class="rec-card" href="https://www.people.com.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="XKnZYvZDaz0r4703MSOH66">
+      <div class="rec-logo" data-page-node-id="IYXCsPXtJs68394xdaUwqL"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="rq2Z9DwSLDl4ngrzxDQ2I1"><rect width="40" height="40" rx="10" fill="#c03a2b" data-page-node-id="1z5UiSzaFuu5Cx35BY2bSa"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="PingFang SC,Microsoft YaHei,sans-serif" data-page-node-id="FgK8Ta3XEzl5TrujairdGF">人</text></svg></div>
+      <div class="rec-body" data-page-node-id="yRqBj5qOAJYLlLk0S6aPbK">
+        <div class="rec-title" data-page-node-id="egrU7DYTMZhzrDHqosCEC2">人民日报<span class="rec-tag" style="background:#c03a2b" data-page-node-id="IDMIDe0I0ojRt4maGx8Nvf">权威时政</span></div>
+        <div class="rec-summary" data-page-node-id="WqAFvZrE7eU1vQyKsHfvLu">中共中央机关报，第一时间传递重大时政与民生要闻。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="uWolGbngXRwO3wLnmx2MSA">前往阅读</span>
+    </a>
+    <a class="rec-card" href="https://news.cctv.com" target="_blank" rel="noopener noreferrer" data-page-node-id="Em91QqKHUyszlWeMDr5FFu">
+      <div class="rec-logo" data-page-node-id="42lOtXqzsE4zkT0Ekgnga6"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="4K1QgYWQKYr4c5L9xZ3T1J"><rect width="40" height="40" rx="10" fill="#005bac" data-page-node-id="lE9c9cwN9kH3FIojI9aurb"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Arial,sans-serif" data-page-node-id="YOoGj8AxZnfUQiFRfc1DCT">CCTV</text></svg></div>
+      <div class="rec-body" data-page-node-id="kl7CGAEYwrUKgIECpJZiIC">
+        <div class="rec-title" data-page-node-id="fjZRyULaaWAREjmzSfuwQ6">央视新闻<span class="rec-tag" style="background:#005bac" data-page-node-id="Pj3IXDEwQxT2IlIpRb7W21">视听新闻</span></div>
+        <div class="rec-summary" data-page-node-id="hs5q2VIxrsdvBkxoPqHOf8">中央广播电视总台新闻门户，权威直播与全天候资讯。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="VgwAwxxeFlOBnTFOHUFQwV">前往阅读</span>
+    </a>
+    <a class="rec-card" href="https://www.cyzone.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="AmlSLGeLl6q1TE7xzXGahf">
+      <div class="rec-logo" data-page-node-id="06vCA5FeuQVIWTU7SVeGYs"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="WowIOLDW05fGgnCp9CYx4H"><rect width="40" height="40" rx="10" fill="#f60" data-page-node-id="UCS2fSO4YU2eeCH06CgMLg"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="16" font-weight="800" font-family="Microsoft YaHei,sans-serif" data-page-node-id="NFXYG98bpWctqKw1ISOEmA">创</text></svg></div>
+      <div class="rec-body" data-page-node-id="Hw84wzUGcCzIWPioJH6sKB">
+        <div class="rec-title" data-page-node-id="qnxCRRn1K36Q6p3kskjdyd">创业邦<span class="rec-tag" style="background:#f60" data-page-node-id="RotyZUP3l9pcgTsdaGQgjW">创投商业</span></div>
+        <div class="rec-summary" data-page-node-id="EJEMFHTEhBC4h0r3iO9Nqr">聚焦创新创投、科技公司与产业趋势的深度报道。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="fN8xCVDjwfJnVMeOeFgwZ4">前往阅读</span>
+    </a>
+    <a class="rec-card" href="https://www.yicai.com" target="_blank" rel="noopener noreferrer" data-page-node-id="MRpucXp8KzfNdiQ7mp7PNT">
+      <div class="rec-logo" data-page-node-id="M5jOdtcBfn3R6YZPx2Ftp5"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="ZgW8OaSocadj9yxPODSus0"><rect width="40" height="40" rx="10" fill="#e60012" data-page-node-id="VUpMDzZHV7pncNkqFgMUSU"/><text x="20" y="23" text-anchor="middle" fill="#fff" font-size="11" font-weight="800" font-family="Microsoft YaHei,sans-serif" data-page-node-id="xdnESN9nDoFCAYoJHvtutg">一财</text></svg></div>
+      <div class="rec-body" data-page-node-id="lSPz5DmK3Lpzli6HnQlEsD">
+        <div class="rec-title" data-page-node-id="76COJekzQOg2kE0IHf9xQ8">第一财经<span class="rec-tag" style="background:#e60012" data-page-node-id="vN9st4lv7gIwT0rFq5JWJf">财经资讯</span></div>
+        <div class="rec-summary" data-page-node-id="ZEejDxpBQcTtxA1GVfVBVW">专业财经媒体，覆盖宏观、市场与商业一线动态。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="FuvHWsN59uk9RMZPwULclp">前往阅读</span>
+    </a>
+    <a class="rec-card" href="https://www.kankanews.com" target="_blank" rel="noopener noreferrer" data-page-node-id="yXpqz2DoWH6xiGh5LnwWEW">
+      <div class="rec-logo" data-page-node-id="2psxFveq762jOUvsVRYthY"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="jw58udFl2TdI72nom6e9uk"><rect width="40" height="40" rx="10" fill="#2d8cf0" data-page-node-id="8iDVkCAnOlHUGAAYoF88vj"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="15" font-weight="800" font-family="Microsoft YaHei,sans-serif" data-page-node-id="OMWwBp8LW1kvP9gIpDBV0A">看</text></svg></div>
+      <div class="rec-body" data-page-node-id="W0kfBqFRcNnywhiezYoCJI">
+        <div class="rec-title" data-page-node-id="0AU2vetR0zL3SySOnJAw9W">看看新闻Knews<span class="rec-tag" style="background:#2d8cf0" data-page-node-id="C3p3mHv9CM8T5Camk0viTz">上海广电</span></div>
+        <div class="rec-summary" data-page-node-id="1eQcWcKgANAiiW0y1qtoav">上海广播电视台融媒体新闻，长三角热点即时播报。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="xnCjpFFaSSqaLwhAumbEXx">前往阅读</span>
+    </a>
+    <a class="rec-card" href="https://www.workbuddy.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="KnOJj5UmE94BYDCbXicG5v">
+      <div class="rec-logo" data-page-node-id="3n1AiCOIjOu6GktFS7BC9n"><svg viewBox="0 0 40 40" width="28" height="28" data-page-node-id="EDHx8H0EI9Lk74rS0AMh1m"><rect width="40" height="40" rx="10" fill="#1669ff" data-page-node-id="Igb93ugg3Ui36s3qB4i41D"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="Arial,sans-serif" data-page-node-id="lvomm6gfANZ4rQZ9qLhWQg">W</text></svg></div>
+      <div class="rec-body" data-page-node-id="1Szkg6YurIdiYYrQzX2SDv">
+        <div class="rec-title" data-page-node-id="9e3XiNBtcDEtJxgTX5SX58">腾讯WorkBuddy<span class="rec-tag" style="background:#1669ff" data-page-node-id="6OjXFqsp72UB3N5JYRkkDR">智能助手</span></div>
+        <div class="rec-summary" data-page-node-id="fECtry5En0ly354XfOEyyS">腾讯出品 AI 工作助手，助力自动化与效率提升。</div>
+      </div>
+      <span class="rec-btn" data-page-node-id="FdKTCy9Mf7LiAnDTco33kQ">前往阅读</span>
+    </a>
+    </div>
+  </section>
+</main>
+<footer class="footer" data-page-node-id="mpBpRaW47MY3l8aSgwD83y">
+  <p class="foot-total" data-page-node-id="39e6FC9Canw1OJiqOkasRk">数据日期：<b data-page-node-id="nPfZR7vkVxiRHszYfHHIGH">2026年9月4日</b> &middot; 本日报共 <b data-page-node-id="vCFC9NBgwA1nBjUkclxFEP">72</b> 条内容 + <b data-page-node-id="E5XTyC5E3IaLY8jQV8m4nV">6</b> 个推荐入口</p>
+  <div class="foot-sources" data-page-node-id="JzGQnwuPB5CUHjOXP7nH60">
+    <span class="foot-label" data-page-node-id="h3Mm6DMtKxAeyclc755MPR">数据来源：</span>
+    <a class="foot-source" href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer" data-page-node-id="MbEkyEkctWFctQ1HMw3DGJ">AI HOT</a>
+    <a class="foot-source" href="https://www.zynews.com" target="_blank" rel="noopener noreferrer" data-page-node-id="dGhQDijP781ULS1nbaAF78">郑州日报</a>
+    <a class="foot-source" href="https://www.thepaper.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="MGAyFfF6EpL2LNIGKtPcw5">郑州发布</a>
+    <a class="foot-source" href="https://zfbzj.zhengzhou.gov.cn/bzxzf/10236270.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="awLiq90AV7cgy8HYe3v4pz">郑州市住房保障局</a>
+    <a class="foot-source" href="https://www.zzjkq.gov.cn/zwdt/10235827.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="MxAj90B9QDH8l20nnfJS6I">郑州经开区</a>
+    <a class="foot-source" href="https://www.zhengzhou.gov.cn/news1/10234917.jhtml" target="_blank" rel="noopener noreferrer" data-page-node-id="LertkdVDY5nCutMioFE9Db">郑州市政府</a>
+    <a class="foot-source" href="https://news.qq.com" target="_blank" rel="noopener noreferrer" data-page-node-id="jVamIwdbf5ctyvvuv5cyzs">腾讯新闻</a>
+    <a class="foot-source" href="https://www.bbtnews.com.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="Ur2L1AgwEwD4aFec3q2IaH">北京商报</a>
+    <a class="foot-source" href="https://www.toutiao.com/article/7680725803948278335/" target="_blank" rel="noopener noreferrer" data-page-node-id="7Q4kxj7gjPcCVLxrYzgEkf">界面新闻</a>
+    <a class="foot-source" href="https://new.qq.com/rain/a/20260902A0CV1W00" target="_blank" rel="noopener noreferrer" data-page-node-id="JeDavJ8gt6B0hAciOV1qO8">商业数据派</a>
+    <a class="foot-source" href="https://www.cls.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="rXDQPzaqVoJzFZNs6sHXWD">科创板日报</a>
+    <a class="foot-source" href="https://blog.csdn.net/u014146389/article/details/164250211" target="_blank" rel="noopener noreferrer" data-page-node-id="0IgdkaiTftYwSBQryzVUQn">CSDN</a>
+    <a class="foot-source" href="https://new.qq.com/rain/a/20260902A05T5X00" target="_blank" rel="noopener noreferrer" data-page-node-id="KvbLo01Lwbj6DjWMbu6WDj">TechWeb</a>
+    <a class="foot-source" href="https://aistart.ai/news?utm_source=jryx" target="_blank" rel="noopener noreferrer" data-page-node-id="2VuSwhNErEQrSY0eNRlFcT">AIStart</a>
+    <a class="foot-source" href="https://www.thecodew.com/2026/09/openai-anthropic-google-meta-unleash-new-ai-models-fall-rush.html?m=1" target="_blank" rel="noopener noreferrer" data-page-node-id="hoJDj6xswaf6b11FAUb0wV">The CODEW</a>
+    <a class="foot-source" href="https://new.qq.com/rain/a/20260904A03C0W00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="ekBtMNHTkCnq7D5ANpWQ0E">腾讯科技</a>
+    <a class="foot-source" href="https://www.oreilly.com/radar/radar-trends-to-watch-september-2026/" target="_blank" rel="noopener noreferrer" data-page-node-id="VkkQbntusdXuGe5RAup8eN">O&#x27;Reilly</a>
+    <a class="foot-source" href="https://new.qq.com/rain/a/20260904A02X0G00" target="_blank" rel="noopener noreferrer" data-page-node-id="vVfk7pU1jwgnq32H42GUHp">凤凰网</a>
+    <a class="foot-source" href="https://www.thepaper.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="0EBuvs1HgsGgm2SmK0Psnp">澎湃新闻</a>
+    <a class="foot-source" href="https://news.cctv.com" target="_blank" rel="noopener noreferrer" data-page-node-id="9uILTSZU14GqxIj6XBkCMj">央视新闻</a>
+    <a class="foot-source" href="https://www.nbd.com.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="puySEDhHnjvbFOJ3qtgSpI">每日经济新闻</a>
+    <a class="foot-source" href="https://new.qq.com/rain/a/20260904A01REY00?refer=cp_1009" target="_blank" rel="noopener noreferrer" data-page-node-id="LysPgjR6il9z3fHvQt7x6m">新华社</a>
+    <a class="foot-source" href="https://www.cls.cn" target="_blank" rel="noopener noreferrer" data-page-node-id="dKCQkR6yX9WFbLfAI0xhOF">财联社</a>
+    <a class="foot-source" href="https://weibo.com/7387669345/5338645776307109" target="_blank" rel="noopener noreferrer" data-page-node-id="5Bp6VEEkse938SQCc56A8e">微博</a>
+    <a class="foot-source" href="https://www.douyin.com/video/7681329819551812883" target="_blank" rel="noopener noreferrer" data-page-node-id="Z5CZPA0I1wbs8OpKWYO0fV">抖音</a>
+    <a class="foot-source" href="https://c.m.163.com/news/a/L605I6PP0556BZBC.html" target="_blank" rel="noopener noreferrer" data-page-node-id="BsHVWdqODT7Y13p5DKNLFD">网易新闻</a>
+    <a class="foot-source" href="https://www.toutiao.com" target="_blank" rel="noopener noreferrer" data-page-node-id="9igN2QBwWzYa8cychryKuQ">今日头条</a>
+    <a class="foot-source" href="https://www.baidu.com" target="_blank" rel="noopener noreferrer" data-page-node-id="CYryqj7icPMJiAwNGeOZyw">每日一笑</a>
+  </div>
+  <p class="foot-attr" data-page-node-id="vLMr4SpG4ZI3w61RcZeXZu">v17 &middot; Hero 紫渐变 &middot; 菜单 active 高亮 &middot; 实时时钟 &middot; 回到顶部 &middot; 数据源全可点击 &middot; 内容由 AI HOT 及公开新闻检索整理</p>
+  <p class="foot-copy" data-page-node-id="sBJNQLQYlUbjDo4HHUvIX1">© 2026 我的定制化日报 &middot; 版权归各内容来源方所有，本页仅作个人阅读整理之用 &middot; 由 WorkBuddy 每日自动生成</p>
+</footer>  <button id="backToTop" class="back-to-top" title="回到顶部" aria-label="回到顶部" data-page-node-id="T21KkiMUB2y6i6hPKTWf2c">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="8kp5eYEWBiaaHELgX7JIbK"><polyline points="18 15 12 9 6 15" data-page-node-id="RfyMBT0CYGkbmG7YH62kFJ"></polyline></svg>
+  </button>
+<script>
+
+(function() {
+  // 1. sticky-stats 监听（添加 .is-stuck）
+  var nav = document.querySelector('.sticky-stats');
+  if (nav) {
+    var sentinel = nav.querySelector('.stats-sentinel');
+    if (!sentinel) {
+      sentinel = document.createElement('div');
+      sentinel.className = 'stats-sentinel';
+      sentinel.style.cssText = 'height:1px;width:100%;';
+      nav.insertBefore(sentinel, nav.firstChild);
+    }
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.intersectionRatio === 0) {
+          nav.classList.add('is-stuck');
+        } else {
+          nav.classList.remove('is-stuck');
+        }
+      });
+    }, { threshold: [0, 1] });
+    observer.observe(sentinel);
+  }
+
+  // 2. Hero 实时时钟
+  var clock = document.getElementById('liveClock');
+  if (clock) {
+    function updateClock() {
+      var now = new Date();
+      var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      var beijing = new Date(utc + (8 * 3600000));
+      var hh = String(beijing.getHours()).padStart(2, '0');
+      var mm = String(beijing.getMinutes()).padStart(2, '0');
+      var ss = String(beijing.getSeconds()).padStart(2, '0');
+      clock.textContent = hh + ':' + mm + ':' + ss;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  // 3. sticky 菜单 active 高亮（scroll-spy + click 高亮）
+  var pills = document.querySelectorAll('.stat-pill');
+  var sections = document.querySelectorAll('section.section');
+
+  // 收集所有 pill 对应的 section id
+  var pillMap = [];
+  pills.forEach(function(pill) {
+    var href = pill.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      pillMap.push({ pill: pill, id: href.substring(1) });
+    }
+  });
+
+  // 滚动时高亮对应的菜单项
+  function updateActivePill() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var activeId = null;
+
+    // 从下往上找：找到最上面的可见 section
+    for (var i = sections.length - 1; i >= 0; i--) {
+      var sec = sections[i];
+      var rect = sec.getBoundingClientRect();
+      // section 顶部在视口上方一点时高亮（避免太早/太晚）
+      if (rect.top <= 120 && rect.bottom > 120) {
+        activeId = sec.id;
+        break;
+      }
+    }
+
+    // 清除所有 active
+    pills.forEach(function(p) { p.classList.remove('is-active'); });
+    // 设置当前 active
+    if (activeId) {
+      pillMap.forEach(function(item) {
+        if (item.id === activeId) {
+          item.pill.classList.add('is-active');
+        }
+      });
+    }
+  }
+
+  window.addEventListener('scroll', updateActivePill, { passive: true });
+  updateActivePill();
+
+  // 点击时立即高亮（不需要等 scroll 事件）
+  pills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      pills.forEach(function(p) { p.classList.remove('is-active'); });
+      pill.classList.add('is-active');
+    });
+  });
+
+  // 4. 回到顶部按钮
+  var backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    backToTop.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // 滚动时显示/隐藏
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }, { passive: true });
+  }
+})();
+
+</script>
+</body>
+</html>
